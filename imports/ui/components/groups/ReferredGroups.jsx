@@ -4,14 +4,15 @@ import { createContainer } from 'meteor/react-meteor-data';
 
 import { Groups } from '../../../api/groups.js';
 import { Users } from '../../../api/users.js';
-
+import Group from './Group.jsx';
 
 class ReferredGroups extends Component {
   
   renderGroups() {
     if(this.props.group){
+      console.log('group', this.props);
       return this.props.group.map((group) => (
-        <Group key={group._id} group={group} owner={false}/>
+        <Group key={group._id} group={group} user={this.props.user} owner={false} referedGroup={true}/>
       ));
     }
     return null;  
@@ -39,6 +40,7 @@ export default createContainer(() => {
   }
 
   if(user.invitations) {
+    result.user = user,
     result.invitations = user.invitations;
     result.group = Groups.find({ _id: {$in: user.invitations.map((group)=> group._id)}}).fetch();
   }

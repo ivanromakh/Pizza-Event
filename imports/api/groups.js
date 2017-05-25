@@ -15,7 +15,6 @@ Meteor.methods({
   'groups.create'(name) {
     check(name, String);
  
-    // Make sure the user is logged in before inserting a task
     if (! Meteor.userId()) {
       throw new Meteor.Error('not-authorized');
     }
@@ -27,9 +26,18 @@ Meteor.methods({
         users: [],
     });
   },
-  'groups.remove'(taskId) {
-    check(taskId, String);
- 
-    Tasks.remove(taskId);
+  'groups.acceptUser' (groupId, user) {
+    if (! Meteor.userId()) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+
+    // if user use google 
+    if(user.profile) {
+      Groups.update({_id: groupId}, {$addToSet: {users: {_id:user._id, username: profile.name}}});
+    }
+    if(user.username) {
+      Groups.update({_id: groupId}, {$addToSet: {users: {_id:user._id, username: user.username}}});
+    }
   },
 });
