@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 
-import ShowClientGroups from './ShowClientGroups';
-import CreateGroupForm from './CreateGroupForm';
+import ShowClientGroups from './groups/ShowClientGroups';
+import CreateGroupForm from './groups/CreateGroupForm';
 import AccountUiWrapper from './AccountUiWrapper'; 
 
 // App component - represents the whole app

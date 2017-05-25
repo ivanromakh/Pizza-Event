@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 
-import { Users } from '../api/users.js';
+import { Users } from '../../../api/users.js';
 
 
 class User extends Component {
@@ -20,7 +20,7 @@ class User extends Component {
       <div>
         <p> 
           {username}
-          <button onClick={this.sendInvitation}>Invite</button>
+          <button className="btn btn-primary btn-xs pull-right" onClick={this.sendInvitation}>Invite</button>
         </p>
       </div>
     );

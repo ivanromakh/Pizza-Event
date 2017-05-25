@@ -2,34 +2,43 @@ import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { createContainer } from 'meteor/react-meteor-data';
 
-import { Groups } from '../api/groups.js';
-import { Users } from '../api/users.js';
+import { Groups } from '../../../api/groups.js';
+import { Users } from '../../../api/users.js';
+
 
 class ReferredGroups extends Component {
+  
+  renderGroups() {
+    if(this.props.group){
+      return this.props.group.map((group) => (
+        <Group key={group._id} group={group} owner={false}/>
+      ));
+    }
+    return null;  
+  }
+
   render() {
-    console.log(this.props);
     return (
-      <p> sdf </p>
+      <div>
+        {this.renderGroups()}
+      </div>
     );
   }
 }
-
 
 export default createContainer(() => {
   Meteor.subscribe('users');
 
   var user = Meteor.users.findOne({ _id: Meteor.userId() });
   var result = {};
-  result.group = {};
   result.invitations = {};
 
   // sometimes user is underfined
   if(!user) {
-    return {};
+    return result;
   }
 
   if(user.invitations) {
-    console.log(user.invitations.map((group)=> group._id));
     result.invitations = user.invitations;
     result.group = Groups.find({ _id: {$in: user.invitations.map((group)=> group._id)}}).fetch();
   }

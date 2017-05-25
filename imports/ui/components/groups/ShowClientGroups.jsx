@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { createContainer } from 'meteor/react-meteor-data';
 
-import { Groups } from '../api/groups.js';
+import { Groups } from '../../../api/groups.js';
 import Group from './Group.jsx';
 import ReferredGroups from './ReferredGroups.jsx';
 
@@ -21,6 +21,7 @@ class ShowClientGroups extends Component {
   }
 
   render() {
+    console.log(this.props);
     return (
       <div className="thumbnail">
         <p> Owner Groups </p>
@@ -44,8 +45,10 @@ ShowClientGroups.propTypes = {
 
 export default createContainer(() => {
   Meteor.subscribe('groups');
+  Meteor.subscribe('users');
 
   return {
+    user: Meteor.users.findOne({ _id: Meteor.userId() }),
     ownerGroups: Groups.find({ owner: Meteor.userId() }).fetch(),
     groups: Groups.find({ owner: { $ne: Meteor.userId() } }).fetch(),
   };

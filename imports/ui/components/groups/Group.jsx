@@ -5,8 +5,7 @@ import InviteForm from './InviteForm';
 class GroupUsers extends Component {
   render() {
     return (
-      <div> users
-      </div>
+      <div> users </div>
     );
   }
 }
@@ -40,9 +39,9 @@ export default class Group extends Component {
           <p>
             {this.props.group.name}
             { 
-              this.props.owner ? (<button onClick={this.onInviteForm}> Invite user </button>) : null
+              this.props.owner ? (<button className="btn btn-primary btn-xs" onClick={this.onInviteForm}> Invite user </button>) : null
             }
-            <button onClick={this.onClick}> Show users </button>
+            <button className="btn btn-primary btn-xs" onClick={this.onClick}> Show users </button>
           </p>
           { this.state.showUsers ? <GroupUsers /> : null }
         </div>
