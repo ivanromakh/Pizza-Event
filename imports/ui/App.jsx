@@ -3,13 +3,12 @@ import ReactDOM from 'react-dom';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 
-import { Groups } from '../api/groups.js';
 import ShowClientGroups from './ShowClientGroups';
 import CreateGroupForm from './CreateGroupForm';
 import AccountUiWrapper from './AccountUiWrapper'; 
 
 // App component - represents the whole app
-class App extends Component {
+export default class App extends Component {
  
   render() {
     return (
@@ -32,10 +31,3 @@ class App extends Component {
     );
   }
 }
-
-export default createContainer(() => {
-  Meteor.subscribe('groups');
-  return {
-    groups: Groups.find({}, { sort: { createdAt: -1 } }).fetch(),
-  };
-}, App);

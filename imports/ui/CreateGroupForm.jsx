@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
-import { Groups } from '../api/groups.js'
+
 
 export default class CreateGroupForm extends Component {
   constructor(props) {

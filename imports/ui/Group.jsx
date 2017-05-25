@@ -1,27 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 
-class User extends Component {
-	render() {
-		return (
-			<div> listeners </div>
-		);
-	}
-}
+import InviteForm from './InviteForm';
 
 class GroupUsers extends Component {
-    render() {
-        return (
-            <div> users
-            </div>
-        );
-    }
-}
-
-class Invite extends Component {
   render() {
     return (
-      <div className="invite-user-form">
-        <button>Invite</button>
+      <div> users
       </div>
     );
   }
@@ -31,33 +15,43 @@ class Invite extends Component {
 export default class Group extends Component {
   constructor(props) {
     super(props);
-    this.state = {showResults: false};
+    this.state = {
+      showUsers: false,
+      showInviteForm: false,
+    };
 
     this.onClick = this.onClick.bind(this);
+    this.onInviteForm = this.onInviteForm.bind(this);
   }
 
-  onClick(){
-    this.setState({ showResults: !this.state.showResults });
+  onInviteForm() {
+    this.setState({ showInviteForm: !this.state.showInviteForm });
+  }
+
+  onClick() {
+    this.setState({ showUsers: !this.state.showUsers });
   }
 
   render() {
     return (
       <div className='thumbnail'>
-        <div onClick={this.onClick}> {this.props.group.name}
-          { this.state.showResults ? <GroupUsers /> : null }
+        <div>
+          { this.state.showInviteForm ? <InviteForm key={this.props.group._id} groupId={this.props.group._id}/> : null } 
+          <p>
+            {this.props.group.name}
+            { 
+              this.props.owner ? (<button onClick={this.onInviteForm}> Invite user </button>) : null
+            }
+            <button onClick={this.onClick}> Show users </button>
+          </p>
+          { this.state.showUsers ? <GroupUsers /> : null }
         </div>
-        <Invite />
       </div>
     );
   }
 }
 
-
-
-
 Group.propTypes = {
-  // This component gets the task to display through a React prop.
-  // We can use propTypes to indicate it is required
   group: PropTypes.object.isRequired,
 };
 

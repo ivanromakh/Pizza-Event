@@ -2,23 +2,37 @@ import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { createContainer } from 'meteor/react-meteor-data';
 
-import { Groups } from '../api/groups.js'
+import { Groups } from '../api/groups.js';
 import Group from './Group.jsx';
+import ReferredGroups from './ReferredGroups.jsx';
+
 
 class ShowClientGroups extends Component {
-  renderGroup(){ 
+  renderGroups(){ 
     return this.props.groups.map((group) => (
-      <Group key={group._id} group={group} />
+      <Group key={group._id} group={group} owner={false}/>
+    )); 
+  }
+
+  renderOwnerGroups(){
+    return this.props.ownerGroups.map((group) => (
+        <Group key={group._id} group={group} owner={true} />
     )); 
   }
 
   render() {
     return (
       <div className="thumbnail">
+        <p> Owner Groups </p>
+        <ul>
+          {this.renderOwnerGroups()}
+        </ul>
         <p> Local Groups </p>
         <ul>
-          {this.renderGroup()}
+          {this.renderGroups()}
         </ul>
+        <p> Groups which invited you </p>
+        <ReferredGroups />
       </div>
     );
   }
@@ -29,7 +43,10 @@ ShowClientGroups.propTypes = {
 };
 
 export default createContainer(() => {
+  Meteor.subscribe('groups');
+
   return {
-    groups: Groups.find({}, { sort: { createdAt: -1 } }).fetch(),
+    ownerGroups: Groups.find({ owner: Meteor.userId() }).fetch(),
+    groups: Groups.find({ owner: { $ne: Meteor.userId() } }).fetch(),
   };
 }, ShowClientGroups);
