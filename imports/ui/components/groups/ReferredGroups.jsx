@@ -9,13 +9,12 @@ import Group from './Group.jsx';
 class ReferredGroups extends Component {
   
   renderGroups() {
-    if(this.props.group){
-      console.log('group', this.props);
+    if(this.props.group) {
       return this.props.group.map((group) => (
         <Group key={group._id} group={group} user={this.props.user} owner={false} referedGroup={true}/>
       ));
     }
-    return null;  
+    return null;
   }
 
   render() {

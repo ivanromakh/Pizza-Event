@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 
 import InviteForm from './InviteForm';
 
-class GroupUsers extends Component {
+class User extends Component {
   render() {
     return (
       <div> users </div>
@@ -11,17 +11,23 @@ class GroupUsers extends Component {
 }
 
 // Group component for each of client groups
-export default class Group extends Component {
+export default class Group extends Component {  
   constructor(props) {
     super(props);
     this.state = {
       showUsers: false,
       showInviteForm: false,
+      activeGroup: false,
     };
 
     this.onClick = this.onClick.bind(this);
     this.onInviteForm = this.onInviteForm.bind(this);
     this.onAccepted = this.onAccepted.bind(this);
+    this.openMenuItems = this.onAccepted.bind(this);
+  }
+
+  renderUser(user) {
+    return <p key={user._id}> {user.username} </p>
   }
 
   // Group owner open invite form
@@ -29,18 +35,24 @@ export default class Group extends Component {
     this.setState({ showInviteForm: !this.state.showInviteForm });
   }
 
+  openMenuItems() {
+    console.log('open menu');
+  }
+
   // User accept group
   onAccepted(){
-    console.log('user', this.props);
     Meteor.call('groups.acceptUser', this.props.group._id, this.props.user);
+    Meteor.call('user.acceptedGroup', this.props.group._id, this.props.user);
   }
 
   // Show users of this group
   onClick() {
+    console.log('user', this.props.group);
     this.setState({ showUsers: !this.state.showUsers });
   }
 
   render() {
+    console.log(this.props);
     return (
       <div className='thumbnail'>
         <div>
@@ -58,8 +70,15 @@ export default class Group extends Component {
             }
             <button className="btn btn-primary btn-xs pull-right"
               onClick={this.onClick}> Show users </button>
+            {
+              !this.props.referedGroup ? (<button className="btn btn-primary btn-xs pull-right"
+                onClick={this.openMenuItems}> MenuItems </button>) : null
+            }
+
           </p>
-          { this.state.showUsers ? <GroupUsers /> : null }
+          { 
+            this.state.showUsers ? this.props.group.users.map((user)=>this.renderUser(user)) : null 
+          }
         </div>
       </div>
     );

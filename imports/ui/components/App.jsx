@@ -9,6 +9,15 @@ import AccountUiWrapper from './AccountUiWrapper';
 
 // App component - represents the whole app
 export default class App extends Component {
+  constructor(props){
+    super(props);
+
+    this.activeGroup = { name: 'sdfsdf' };
+  }
+
+  changeActiveGroup(group) {
+    this.activeGroup = group;
+  }
  
   render() {
     return (
@@ -17,13 +26,16 @@ export default class App extends Component {
           <div className="col-md-8">
   		      <div className='thumbnail left-column'>
               <h1> Pizza Ordering </h1>
+              <p>{ this.activeGroup.name }</p>
   		      </div>
   		    </div>
             <div className="col-md-4">
   		        <div className='thumbnail right-column'>
   		          <AccountUiWrapper />
   		          <CreateGroupForm />
-  		          <ShowClientGroups />
+  		          <ShowClientGroups 
+                  changeActiveGroup={this.changeActiveGroup.bind(this)}
+                />
   		      </div>
           </div>
 	      </div>
