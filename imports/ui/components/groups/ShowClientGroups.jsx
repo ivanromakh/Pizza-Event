@@ -6,7 +6,6 @@ import { Tracker } from 'meteor/tracker';
 import { Groups } from '../../../api/groups.js';
 import Group from './Group.jsx';
 import ReferredGroups from './ReferredGroups.jsx';
-import ClientGroups from './ClientGroups.jsx';
 
 
 class ShowClientGroups extends Component {
@@ -14,16 +13,20 @@ class ShowClientGroups extends Component {
     super(props);
   }
 
-
   renderClientGroups() {
-    var groups = this.props.user.groups; 
+    var groups = this.props.groupsData; 
     groups = groups ? groups : [];
-    return <ClientGroups user={this.props.user} groups={groups} />; 
+
+    return groups.map((group) => (
+      <Group key={group._id} group={group} 
+        user={this.props.user} owner={false} />
+    ));
   }
 
   renderOwnerGroups() {
     return this.props.ownerGroups.map((group) => (
-        <p> group.name </p>
+      <Group key={group._id} group={group} 
+        user={this.props.user} owner={true} />
     )); 
   }
 
@@ -56,10 +59,17 @@ export default createContainer(() => {
     Meteor.subscribe('groups');
     Meteor.subscribe('users');
   });
+  var groupsData = null;
+  if(Meteor.user()){
+    if(Meteor.user().groups && Meteor.user().groups != []){
+        groupsData = Groups.find({ $or : Meteor.user().groups }).fetch();
+    }
+  }
 
   return {
     user: Meteor.users.findOne({ _id: Meteor.userId() }) || { groups: [] },
     ownerGroups: Groups.find({ owner: Meteor.userId() }).fetch(),
     groups: Groups.find({ owner: { $ne: Meteor.userId() } }).fetch(),
+    groupsData: groupsData,
   };
 }, ShowClientGroups);

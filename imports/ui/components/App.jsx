@@ -5,20 +5,18 @@ import { createContainer } from 'meteor/react-meteor-data';
 
 import ShowClientGroups from './groups/ShowClientGroups';
 import CreateGroupForm from './groups/CreateGroupForm';
+import MenuItems from './groups/MenuItems';
 import AccountUiWrapper from './AccountUiWrapper'; 
 
 // App component - represents the whole app
 export default class App extends Component {
   constructor(props){
     super(props);
-
-    this.activeGroup = { name: 'sdfsdf' };
+    this.state = {
+      activeGroup: false,
+    };
   }
 
-  changeActiveGroup(group) {
-    this.activeGroup = group;
-  }
- 
   render() {
     return (
       <div className="container">
@@ -26,16 +24,15 @@ export default class App extends Component {
           <div className="col-md-8">
   		      <div className='thumbnail left-column'>
               <h1> Pizza Ordering </h1>
-              <p>{ this.activeGroup.name }</p>
+              <p>{ this.state.activeGroup }</p>
+              <MenuItems groupId={this.state.activeGroup} />
   		      </div>
   		    </div>
             <div className="col-md-4">
   		        <div className='thumbnail right-column'>
   		          <AccountUiWrapper />
   		          <CreateGroupForm />
-  		          <ShowClientGroups 
-                  changeActiveGroup={this.changeActiveGroup.bind(this)}
-                />
+  		          <ShowClientGroups />
   		      </div>
           </div>
 	      </div>

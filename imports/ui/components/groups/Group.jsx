@@ -23,7 +23,7 @@ export default class Group extends Component {
     this.onClick = this.onClick.bind(this);
     this.onInviteForm = this.onInviteForm.bind(this);
     this.onAccepted = this.onAccepted.bind(this);
-    this.openMenuItems = this.onAccepted.bind(this);
+    this.openMenuItems = this.openMenuItems.bind(this);
   }
 
   renderUser(user) {
@@ -36,7 +36,7 @@ export default class Group extends Component {
   }
 
   openMenuItems() {
-    console.log('open menu');
+    Meteor.call('user.setActiveGroup', this.props.group._id);
   }
 
   // User accept group
@@ -47,12 +47,10 @@ export default class Group extends Component {
 
   // Show users of this group
   onClick() {
-    console.log('user', this.props.group);
     this.setState({ showUsers: !this.state.showUsers });
   }
 
   render() {
-    console.log(this.props);
     return (
       <div className='thumbnail'>
         <div>
