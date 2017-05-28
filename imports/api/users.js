@@ -14,7 +14,7 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
-    Meteor.users.update({_id: userId}, {$addToSet: {invitations: {_id:groupId}}});
+    Meteor.users.update({_id: userId}, {$addToSet: {invitations: {_id: groupId}}});
   },
 
   'user.acceptedGroup'(groupId) {
@@ -24,8 +24,8 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
-    Meteor.users.update({_id: userId}, {$unset: {invitations: {_id:groupId}}});
-    Meteor.users.update({_id: userId}, {$addToSet: {groups: {_id:groupId}}});
+    Meteor.users.update({_id: userId}, {$pull: {"invitations": {_id: groupId}}});
+    Meteor.users.update({_id: userId}, {$addToSet: {groups: {_id: groupId}}});
   },
 
   'user.setActiveGroup' (groupId){

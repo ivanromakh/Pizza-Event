@@ -19,24 +19,24 @@ export default class App extends Component {
 
   render() {
     return (
-      <div className="container">
-        <div className='row'>
-          <div className="col-md-8">
-  		      <div className='thumbnail left-column'>
-              <h1> Pizza Ordering </h1>
-              <p>{ this.state.activeGroup }</p>
-              <MenuItems groupId={this.state.activeGroup} />
+        <div className="container noColor">
+          <div className='row'>
+            <div className="col-md-8">
+  		        <div className='left-column'>
+                <h1> Pizza Ordering </h1>
+                <p>{ this.state.activeGroup }</p>
+                <MenuItems groupId={ this.state.activeGroup } />
+  		        </div>
   		      </div>
-  		    </div>
-            <div className="col-md-4">
-  		        <div className='thumbnail right-column'>
-  		          <AccountUiWrapper />
-  		          <CreateGroupForm />
-  		          <ShowClientGroups />
-  		      </div>
-          </div>
-	      </div>
-      </div>
+              <div className="col-md-4">
+  		          <div className='right-column'>
+  		            <AccountUiWrapper />
+  		            <CreateGroupForm />
+  		            <ShowClientGroups />
+  		        </div>
+            </div>
+	        </div>
+        </div>
     );
   }
 }
