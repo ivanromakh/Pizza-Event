@@ -1,47 +1,54 @@
 import React, { Component, PropTypes } from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 
-import { Users } from '../../../api/users.js';
+import { Users } from '../../../api/users/users';
 
-
-class User extends Component {
-  constructor(props) {
-    super(props);
-    this.sendInvitation = this.sendInvitation.bind(this);
-  }
-  sendInvitation() {
-    Meteor.call('user.inviteGroup', this.props.user._id, this.props.groupId);
-  }
-
-  render() {
-    var username = this.props.user.profile ? 
-      this.props.user.profile.name : this.props.user.username;
-    return (
-      <div>
-        <p> 
-          {username}
-          <button className="btn btn-primary btn-xs pull-right" onClick={this.sendInvitation}>Invite</button>
-        </p>
-      </div>
-    );
-  }
-}
 
 class InviteForm extends Component {
-  // this is not very good 
-  // I send all users becouse I think there isn`t many users
-  // If there is very many users, this must be updated
-  renderAllUsers() {
-    return this.props.users.map((user) => (
-        <User key={user._id} user={user} groupId={this.props.groupId}  />
-    ));
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      selectedUser: '',
+      disabled: false
+    };
+
+    this.sendInvitation = this.sendInvitation.bind(this);
+    this.handleSelectChange = this.handleSelectChange.bind(this);
+  }
+
+  handleSelectChange(newValue) {
+    this.setState({
+      selectedUser: newValue
+    });
+  }
+
+  sendInvitation(event) {
+    event.preventDefault();
+
+    Meteor.call('user.inviteGroup', this.state.selectedUser.value, this.props.groupId);
   }
 
   render() {
-    console.log(this.props.users, this.props);
+    var options = this.props.users.map(function(user){
+      option = {};
+      option.value = user._id;
+      option.label = user.profile ? user.profile.name : user.username;
+    });
+
     return (
-      <div className="invite">
-        {this.renderAllUsers()}
+      <div>
+        <form onSubmit={this.sendInvitation}>
+          <Select autofocus options={options}
+            name="selected-order"
+            disabled={this.state.disabled}
+            value={this.state.selectedUser} onChange={this.handleSelectChange} 
+            searchable={this.state.searchable}
+          />
+          <button type="submit" className>Invite</button>
+        </form>
       </div>
     );
   }

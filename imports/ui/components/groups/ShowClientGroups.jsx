@@ -1,11 +1,10 @@
 import React, { Component, PropTypes } from 'react';
-import ReactDOM from 'react-dom';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Tracker } from 'meteor/tracker';
 
-import { Groups } from '../../../api/groups.js';
-import Group from './Group.jsx';
-import ReferredGroups from './ReferredGroups.jsx';
+import { Groups } from '../../../api/groups/groups';
+import Group from './Group';
+import ReferredGroups from './ReferredGroups';
 
 
 class ShowClientGroups extends Component {
@@ -31,7 +30,6 @@ class ShowClientGroups extends Component {
   }
 
   render() {
-    console.log('123123', this.props);
     return (
       <div className="thumbnail">
         <p> Owner Groups </p>

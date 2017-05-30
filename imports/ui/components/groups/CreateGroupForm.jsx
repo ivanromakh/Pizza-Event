@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 
-
 export default class CreateGroupForm extends Component {
   constructor(props) {
     super(props);
@@ -73,7 +72,7 @@ export default class CreateGroupForm extends Component {
               </label>
               <input type="submit" value="Create" />
             </form>
-            <button className="btn btn-primary btn-xs" onClick={this.toggleForm} value> Save group </button>;
+            <button className="btn btn-primary btn-xs" onClick={this.toggleForm} value> Hide creation group </button>;
           </div>
         );
       } else {

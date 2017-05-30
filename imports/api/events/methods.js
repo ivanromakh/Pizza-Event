@@ -1,15 +1,4 @@
-import { Meteor } from 'meteor/meteor';
-import { Mongo } from 'meteor/mongo';
-import { check } from 'meteor/check';
-
-export const Events = new Mongo.Collection('events');
- 
-if (Meteor.isServer) {
-  // This code only runs on the server
-  Meteor.publish('events', function groupsPublication() {
-    return Events.find();
-  });
-}
+import { Events } from './events';
 
 Meteor.methods({
   'events.createEvent'(groupId, timestamp) {
@@ -42,5 +31,5 @@ Meteor.methods({
 
     Events.update({_id: eventId, "users._id": userId}, 
       {$push: {"users.$.orders": {name: orderName, price: orderPrice, count: orderCount}}});
-  }
+  },
 });

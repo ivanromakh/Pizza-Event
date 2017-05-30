@@ -1,10 +1,9 @@
 import React, { Component, PropTypes } from 'react';
-import ReactDOM from 'react-dom';
 import { createContainer } from 'meteor/react-meteor-data';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 
-import { Events } from '../../../api/events.js'; 
+import { Events } from '../../../api/events/events'; 
 import Order from './Order';
 
 class EventOrdering extends Component {
@@ -49,6 +48,10 @@ class EventOrdering extends Component {
   	  var time = new Date(this.props.event.date).toString();
   	  var menuItems = this.props.group.menuItems;
 
+      if(!menuItems){
+        menuItems = [];
+      }
+
       var options = menuItems.map(function(item){ 
         var x = {};
         x.label = item.name + ' ' + item.price + '$';
@@ -58,7 +61,15 @@ class EventOrdering extends Component {
       });
 
       var user = this.props.event.users.find(function(user){if(user._id == Meteor.userId()) return user.orders});
-  	  return (
+  	  
+      if(!user){
+        user = {orders: []};
+      }
+      if(!user.orders){
+        user.orders = [];
+      }
+
+      return (
   	  	<div>
   	  	  <h1> Event {time} orders </h1>
           <div className="events-table">
