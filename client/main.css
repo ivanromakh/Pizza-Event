@@ -20,6 +20,7 @@ body {
   border-style: solid;
   border-radius: 10px;
   border-color: grey;
+  padding: 3%;
 }
 
 .right-column {
@@ -51,8 +52,7 @@ body {
   background-color: #eee;
 }
 
-.menu-items-table {
-  margin: 3%;
+.menu-items-table, .events-table {
   border-style: solid;
   border-radius: 5px; 
   background-color: white;
@@ -60,20 +60,20 @@ body {
   display: table;
 }
 
-.menu-item-row {
+.menu-item-row, .event-row, .events-row {
   display: table-row;
   border: solid;
   border-width: 1px;
 }
 
-.menu-item-name {
+.menu-item-name, .event-date, .event-status {
   display: table-cell;
   border: solid;
   border-width: 1px;
   padding: 5px;
 }
 
-.menu-item-head {
+.menu-item-head, .events-head {
   display: table-cell;
   border: solid;
   border-width: 1px;
@@ -87,7 +87,7 @@ body {
   padding: 5px;
 }
 
-.menu-item-action {
+.menu-item-action, .event-actions {
   display: table-cell;
   border: solid;
   border-width: 1px;
@@ -97,4 +97,8 @@ body {
 .preview-group-logo {
   width: 50%;
   height: 30%;
+}
+
+.create-event {
+  display: l;
 }

@@ -1,39 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import ReactDOM from 'react-dom';
-import { createContainer } from 'meteor/react-meteor-data';
 import keyIndex from 'react-key-index';
 
-import { Groups } from '../../../api/groups.js';
-
-class MenuItem extends Component {
-  constructor(props) {
-    super(props);
-
-    this.deleteItem = this.deleteItem.bind(this);
-  }
-
-  deleteItem() {
-    console.log(this.props.item);
-    let itemName = this.props.item.name;
-    let groupId = this.props.groupId;
-    Meteor.call('groups.removeMenuItem', groupId, itemName);
-  }
-
-  render() {
-    var item = this.props.item;
-    return (
-      <div className="menu-item-row">
-        <div className="menu-item-name"> {item.name} </div>
-        <div className="menu-item-price"> {item.price} </div>
-        <div className="menu-item-action">
-          <button className="btn btn-primary btn-xs" onClick={this.deleteItem}> 
-            Delete Item 
-          </button>
-        </div>
-      </div>
-    );
-  }
-}
+import Item from './Item';
 
 export default class MenuItems extends Component {
   constructor(props) {
@@ -73,7 +41,7 @@ export default class MenuItems extends Component {
       items = keyIndex(items, 1);
       let groupId = this.props.group._id;
       return items.map((item) => 
-        <MenuItem key={item._nameId} item={item} groupId={groupId}/>
+        <Item key={item._nameId} item={item} groupId={groupId}/>
       );
     } else {
       return null

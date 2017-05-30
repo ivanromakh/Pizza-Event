@@ -50,37 +50,41 @@ export default class CreateGroupForm extends Component {
   }
 
   render() {
-    if(this.state.showForm){
-      let imagePreviewUrl = this.state.imagePreviewUrl;
-      let $imagePreview = null;
-
-      if (imagePreviewUrl) {
-        $imagePreview = (<img className="preview-group-logo" src={imagePreviewUrl} />);
+    if(Meteor.userId()){
+      if(this.state.showForm){
+        let imagePreviewUrl = this.state.imagePreviewUrl;
+        let $imagePreview = null;
+ 
+        if (imagePreviewUrl) {
+          $imagePreview = (<img className="preview-group-logo" src={imagePreviewUrl} />);
+        } else {
+          $imagePreview = (<div className="preview-group-logo">Please select an Image for Preview</div>);
+        }
+ 
+        return (
+          <div className="create-group-form">
+            <form onSubmit={this.createGroup}>
+              <h4> Create group </h4>
+              <input type="file" onChange={this.handleImageChange} />
+              {$imagePreview}
+              <label>
+                Name:
+                <input type="text" value={this.state.groupName} onChange={this.handleChange} />
+              </label>
+              <input type="submit" value="Create" />
+            </form>
+            <button className="btn btn-primary btn-xs" onClick={this.toggleForm} value> Save group </button>;
+          </div>
+        );
       } else {
-        $imagePreview = (<div className="preview-group-logo">Please select an Image for Preview</div>);
+        return (
+          <div className="create-group-form"> 
+            <button className="btn btn-primary btn-xs" onClick={this.toggleForm} value> Show creation group </button>
+          </div>
+        );
       }
-
-      return (
-        <div className="create-group-form">
-          <form onSubmit={this.createGroup}>
-            <h4> Create group </h4>
-            <input type="file" onChange={this.handleImageChange} />
-            {$imagePreview}
-            <label>
-              Name:
-              <input type="text" value={this.state.groupName} onChange={this.handleChange} />
-            </label>
-            <input type="submit" value="Create" />
-          </form>
-          <button className="btn btn-primary btn-xs" onClick={this.toggleForm} value> Save group </button>;
-        </div>
-      );
     } else {
-      return (
-        <div className="create-group-form"> 
-          <button className="btn btn-primary btn-xs" onClick={this.toggleForm} value> Show creation group </button>
-        </div>
-      );
+      return <p> Pleasure sign in if you want to see groups </p>;
     }
   }
 }

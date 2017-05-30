@@ -71,5 +71,5 @@ Meteor.methods({
       }, { 
         $pull: {menuItems: {name: itemName}}
       }, false, true);
-  }
+  },
 });
