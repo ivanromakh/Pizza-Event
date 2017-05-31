@@ -2,13 +2,6 @@ import React, { Component, PropTypes } from 'react';
 
 import InviteForm from './InviteForm';
 
-class User extends Component {
-  render() {
-    return (
-      <div> users </div>
-    );
-  }
-}
 
 // Group component for each of client groups
 export default class Group extends Component {  
@@ -27,7 +20,7 @@ export default class Group extends Component {
   }
 
   renderUser(user) {
-    return <p key={user._id}> {user.username} </p>
+    return <p key={ user._id }> { user.username } </p>
   }
 
   // Group owner open invite form
@@ -40,7 +33,7 @@ export default class Group extends Component {
   }
 
   // User accept group
-  onAccepted(){
+  onAccepted() {
     Meteor.call('groups.acceptUser', this.props.group._id, this.props.user);
     Meteor.call('user.acceptedGroup', this.props.group._id, this.props.user);
   }
@@ -54,25 +47,24 @@ export default class Group extends Component {
     return (
       <div className='thumbnail'>
         <div>
-          { this.state.showInviteForm ? <InviteForm key={this.props.group._id}
+          { this.state.showInviteForm ? <InviteForm key={ this.props.group._id }
             groupId={this.props.group._id}/> : null }
           <p>
             {this.props.group.name}
             {
               this.props.referedGroup ? (<button className="btn btn-primary btn-xs pull-right"
-                onClick={this.onAccepted}> Accept</button>) : null
+                onClick={ this.onAccepted }> Accept</button>) : null
             }
             {
               this.props.owner ? (<button className="btn btn-primary btn-xs pull-right"
-                onClick={this.onInviteForm}> Invite user </button>) : null
+                onClick={ this.onInviteForm }> Invite user </button>) : null
             }
             <button className="btn btn-primary btn-xs pull-right"
-              onClick={this.onClick}> Show users </button>
+              onClick={ this.onClick }> Show users </button>
             {
               !this.props.referedGroup ? (<button className="btn btn-primary btn-xs pull-right"
-                onClick={this.openMenuItems}> MenuItems </button>) : null
+                onClick={ this.openMenuItems }> MenuItems </button>) : null
             }
-
           </p>
           { 
             this.state.showUsers ? this.props.group.users.map((user)=>this.renderUser(user)) : null 

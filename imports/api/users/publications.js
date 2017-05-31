@@ -1,7 +1,5 @@
 import { Meteor } from 'meteor/meteor';
 
-import { Users } from './users';
-
 
 Meteor.publish('users', function groupsPublication() {
   return Meteor.users.find({}, {fields: {emails: 1, profile: 1, 

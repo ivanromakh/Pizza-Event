@@ -32,4 +32,14 @@ Meteor.methods({
     Events.update({_id: eventId, "users._id": userId}, 
       {$push: {"users.$.orders": {name: orderName, price: orderPrice, count: orderCount}}});
   },
+
+  'events.confirmOrder'(eventId) {
+    let userId = Meteor.userId();
+    if (!userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+    console.log('ffff', userId);
+    Events.update({_id: eventId, "users._id": userId},
+      {$set: {"users.$.confirm": true}});
+  }
 });

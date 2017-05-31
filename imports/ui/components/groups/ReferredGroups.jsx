@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { createContainer } from 'meteor/react-meteor-data';
 
 import { Groups } from '../../../api/groups/groups';
-import { Users } from '../../../api/users/users';
 import Group from './Group.jsx';
 
 class ReferredGroups extends Component {

@@ -15,13 +15,14 @@ class App extends Component {
   render() {
     var group = this.props.group;
     var events = this.props.events;
+
     return (
       <div className="page">
         <div className='page--row'>
-          <div className="col-md-8 page--column">
+          <div className="col-md-7 page--column">
             <h1> Pizza Ordering </h1>
-            <PizzaEvents group={group} events={events} />
-            <MenuItems group={group} />
+            <PizzaEvents group={ group } events={ events } />
+            <MenuItems group={ group } />
   	      </div>
           <div className="col-md-4 page--column">
   	        <AccountUiWrapper />
@@ -42,8 +43,8 @@ export default createContainer(() => {
     var activeGroup = Meteor.user().activeGroup;
 
     return {
-      group: Groups.findOne({_id: activeGroup}),
-      events: Events.find({groupId: activeGroup}).fetch(),
+      group: Groups.findOne({ _id: activeGroup }),
+      events: Events.find({ groupId: activeGroup }).fetch(),
     }
   }
   return {};

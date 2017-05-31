@@ -11,23 +11,17 @@ body {
   background-attachment: fixed;
 }
 
-.noColor {
+.page--row {
   background-color: rgba(255, 255, 255, 0);
 }
 
-.left-column {
+.page--column {
+  margin: 2%;
   background-color: rgba(255, 255, 255, 0.5);
   border-style: solid;
   border-radius: 10px;
   border-color: grey;
   padding: 3%;
-}
-
-.right-column {
-  background-color: rgba(255, 255, 255, 0.5);
-  border-style: solid;
-  border-radius: 10px;
-  border-color: grey;
 }
 
 .invite {
@@ -66,7 +60,7 @@ body {
   border-width: 1px;
 }
 
-.menu-item-name, .event-date, .event-status {
+.menu-item-name, .menu-item-coupon, .event-date, .event-status {
   display: table-cell;
   border: solid;
   border-width: 1px;

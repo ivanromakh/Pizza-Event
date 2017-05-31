@@ -2,16 +2,13 @@ import React, { Component, PropTypes } from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Tracker } from 'meteor/tracker';
 
+import {Images} from '../../../api/images/images';
 import { Groups } from '../../../api/groups/groups';
 import Group from './Group';
 import ReferredGroups from './ReferredGroups';
 
 
 class ShowClientGroups extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   renderClientGroups() {
     var groups = this.props.groupsData; 
     groups = groups ? groups : [];
@@ -56,6 +53,7 @@ export default createContainer(() => {
   Tracker.autorun(() => {
     Meteor.subscribe('groups');
     Meteor.subscribe('users');
+    Meteor.subscribe('images');
   });
   var groupsData = null;
   if(Meteor.user()){
@@ -63,6 +61,22 @@ export default createContainer(() => {
         groupsData = Groups.find({ $or : Meteor.user().groups }).fetch();
     }
   }
+  var images = Images.find().fetch();
+  images.map(function(image, i){
+    console.log(i, image.url());
+  });
+
+  var groups = Groups.find({ owner: { $ne: Meteor.userId() } }).fetch();
+
+  // insert image logo in each group
+  groups.forEach(function(group){
+    console.log('images', this);
+    var groupLogo = Images.findOne({groupId: group._id});
+    console.log('image', groupLogo);
+    group.image = groupLogo;
+  });
+
+  console.log('groups', groups);
 
   return {
     user: Meteor.users.findOne({ _id: Meteor.userId() }) || { groups: [] },

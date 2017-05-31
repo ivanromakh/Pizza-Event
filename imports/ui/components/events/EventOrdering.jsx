@@ -15,6 +15,7 @@ class EventOrdering extends Component {
     this.createOrder = this.createOrder.bind(this);
     this.handleCountChange = this.handleCountChange.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
+    this.ConfirmOrder = this.ConfirmOrder.bind(this);
   }
 
   createOrder(event) {
@@ -22,7 +23,6 @@ class EventOrdering extends Component {
     var eventId = this.props.event._id;
     var count = this.state.count;
     var selectValue = this.state.selectValue;
-    console.log(6666, eventId, count, selectValue);
     Meteor.call('events.createOrder', 
       eventId, selectValue.value, selectValue.price, count);
   }
@@ -41,6 +41,11 @@ class EventOrdering extends Component {
     this.setState({
       selectValue: newValue
     });
+  }
+
+  ConfirmOrder() {
+    var eventId = this.props.event._id;
+    Meteor.call('events.confirmOrder', eventId);
   }
 
   render() {
@@ -82,6 +87,7 @@ class EventOrdering extends Component {
               user.orders.map(function(order){ return <Order order={order} />; })
             }
           </div>
+          { this.props.event.status == 'ordering' ? (
           <div className="create-order">
             <form onSubmit={this.createOrder}>
               <Select autofocus options={options}
@@ -95,9 +101,10 @@ class EventOrdering extends Component {
                   <input type="number" value={this.state.count} 
                     onChange={this.handleCountChange} />
               </label>
-              <input type="submit" value="Create" />
+              <input type="submit" value="add to order" />
             </form>
-          </div>
+            <button onClick={this.ConfirmOrder}>Cofirm order</button>
+          </div>) : null }
   	  	</div>
   	  );
     }

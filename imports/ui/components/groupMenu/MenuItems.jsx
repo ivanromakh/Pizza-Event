@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import keyIndex from 'react-key-index';
 
 import Item from './Item';
 
@@ -38,10 +37,9 @@ export default class MenuItems extends Component {
   showMenuItems() {
     var items = this.props.group.menuItems;
     if(items && items != []){
-      items = keyIndex(items, 1);
       let groupId = this.props.group._id;
       return items.map((item) => 
-        <Item key={item._nameId} item={item} groupId={groupId}/>
+        <Item item={item} groupId={groupId} groupOwner={this.props.group.owner}/>
       );
     } else {
       return null
@@ -49,7 +47,6 @@ export default class MenuItems extends Component {
   }
 
   render() {
-    console.log(this.props);
     if(this.props.group){
       return (
         <div>
@@ -58,6 +55,7 @@ export default class MenuItems extends Component {
             <div className="menu-item-row">
               <div className="menu-item-head"> Name </div>
               <div className="menu-item-head"> Price </div>
+              <div className="menu-item-head"> Free Coupons </div>
               <div className="menu-item-head"> Actions </div>
             </div>
             {this.showMenuItems()}

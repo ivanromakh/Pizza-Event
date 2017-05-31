@@ -3,8 +3,6 @@ import { createContainer } from 'meteor/react-meteor-data';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 
-import { Users } from '../../../api/users/users';
-
 
 class InviteForm extends Component {
   constructor(props) {
@@ -27,25 +25,30 @@ class InviteForm extends Component {
 
   sendInvitation(event) {
     event.preventDefault();
-
+    Meteor.call('groups.inviteUser', this.props.groupId, this.state.selectedUser.value);
     Meteor.call('user.inviteGroup', this.state.selectedUser.value, this.props.groupId);
   }
 
   render() {
-    var options = this.props.users.map(function(user){
+    var options = this.props.users.map(function(user) {
       option = {};
       option.value = user._id;
       option.label = user.profile ? user.profile.name : user.username;
+      return option;
     });
+
+    if(!options) {
+      options = [];
+    }
 
     return (
       <div>
-        <form onSubmit={this.sendInvitation}>
-          <Select autofocus options={options}
+        <form onSubmit={ this.sendInvitation }>
+          <Select autofocus options={ options }
             name="selected-order"
-            disabled={this.state.disabled}
-            value={this.state.selectedUser} onChange={this.handleSelectChange} 
-            searchable={this.state.searchable}
+            disabled={ this.state.disabled }
+            value={ this.state.selectedUser } onChange={ this.handleSelectChange } 
+            searchable={ this.state.searchable }
           />
           <button type="submit" className>Invite</button>
         </form>
@@ -56,12 +59,13 @@ class InviteForm extends Component {
 
 InviteForm.propTypes = {
   users: PropTypes.array.isRequired,
+  groupId: PropTypes.string.isRequired,
 };
 
 export default createContainer(() => {
   Meteor.subscribe('users');
   
   return {
-    users: Meteor.users.find({_id: { $ne: Meteor.userId() }}).fetch(),
+    users: Meteor.users.find({ _id: { $ne: Meteor.userId() } }).fetch(),
   };
 }, InviteForm);

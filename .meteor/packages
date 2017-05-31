@@ -22,3 +22,7 @@ accounts-ui
 accounts-password
 accounts-google
 google-config-ui
+cfs:standard-packages
+cfs:filesystem
+email
+service-configuration

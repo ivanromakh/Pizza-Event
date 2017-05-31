@@ -1,4 +1,3 @@
-import { Users } from './users';
 
 Meteor.methods({
   'user.inviteGroup'(userId, groupId) {
