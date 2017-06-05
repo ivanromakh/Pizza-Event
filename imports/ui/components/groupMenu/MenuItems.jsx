@@ -1,6 +1,8 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import Item from './Item';
+
 
 export default class MenuItems extends Component {
   constructor(props) {
@@ -17,11 +19,11 @@ export default class MenuItems extends Component {
   }
 
   handleNameChange(event) {
-    this.setState({itemName: event.target.value});
+    this.setState({ itemName: event.target.value });
   }
 
   handlePriceChange(event) {
-    this.setState({itemPrice: event.target.value});
+    this.setState({ itemPrice: event.target.value });
   }
   
   addNewItem(event) {
@@ -30,7 +32,7 @@ export default class MenuItems extends Component {
     var price = this.state.itemPrice;
 
     Meteor.call('groups.addMenuItem', this.props.group._id, name, price);
-    this.setState({itemName: '', itemPrice: ''});
+    this.setState({ itemName: '', itemPrice: '' });
     return null;
   }
 
@@ -39,7 +41,11 @@ export default class MenuItems extends Component {
     if(items && items != []){
       let groupId = this.props.group._id;
       return items.map((item) => 
-        <Item item={item} groupId={groupId} groupOwner={this.props.group.owner}/>
+        <Item 
+          item={ item } 
+          groupId={ groupId } 
+          groupOwner={ this.props.group.owner }
+        />
       );
     } else {
       return null
@@ -50,7 +56,7 @@ export default class MenuItems extends Component {
     if(this.props.group){
       return (
         <div>
-          <h3>{this.props.group.name} Menu List </h3>
+          <h3>{ this.props.group.name } Menu List </h3>
           <div className="menu-items-table">
             <div className="menu-item-row">
               <div className="menu-item-head"> Name </div>
@@ -58,25 +64,25 @@ export default class MenuItems extends Component {
               <div className="menu-item-head"> Free Coupons </div>
               <div className="menu-item-head"> Actions </div>
             </div>
-            {this.showMenuItems()}
+            { this.showMenuItems() }
           </div>
-          <form className="form-inline" onSubmit={this.addNewItem}>            
+          <form className="form-inline" onSubmit={ this.addNewItem }>            
             <div className="form-group">
               <label> Product Name: </label>
               <input
-                value={this.state.itemName}
+                value={ this.state.itemName }
                 className="form-control"
                 type="text"
-                onChange={this.handleNameChange}
+                onChange={ this.handleNameChange }
               />
             </div>
             <div className="form-group">
               <label> Price: </label>
               <input
-                value={this.state.itemPrice} 
+                value={ this.state.itemPrice } 
                 className="form-control" 
                 type="text"
-                onChange={this.handlePriceChange}
+                onChange={ this.handlePriceChange }
               />
             </div>
             <input type="submit" value="Create" />
@@ -88,3 +94,7 @@ export default class MenuItems extends Component {
     }
   }
 }
+
+MenuItems.propTypes = {
+  group: PropTypes.object.isRequired,
+};

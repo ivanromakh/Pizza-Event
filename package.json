@@ -7,8 +7,10 @@
   "dependencies": {
     "babel-runtime": "^6.20.0",
     "bcrypt": "^1.0.2",
+    "eslint-plugin-react": "^7.0.1",
     "meteor-node-stubs": "~0.2.4",
     "moment": "^2.18.1",
+    "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-calendar": "^1.1.0",
     "react-date-picker": "^5.3.28",
@@ -18,5 +20,9 @@
     "react-mounter": "^1.2.0",
     "react-router": "^3.0.5",
     "react-select": "^1.0.0-rc.5"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-plugin-react": "^7.0.1"
   }
 }

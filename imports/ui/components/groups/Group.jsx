@@ -1,5 +1,5 @@
-import React, { Component, PropTypes } from 'react';
-
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import InviteForm from './InviteForm';
 
 
@@ -44,13 +44,22 @@ export default class Group extends Component {
   }
 
   render() {
+    var group = this.props.group;
+    var logo = group.logo ? group.logo : 'profile-group.png';
     return (
       <div className='thumbnail'>
         <div>
-          { this.state.showInviteForm ? <InviteForm key={ this.props.group._id }
-            groupId={this.props.group._id}/> : null }
+          { 
+            this.state.showInviteForm 
+              ? <InviteForm 
+                  key={ group._id }
+                  groupId={ group._id }
+                /> 
+              : null 
+          }
           <p>
-            {this.props.group.name}
+            <img src={ logo } height="42" width="42" />
+            { this.props.group.name }
             {
               this.props.referedGroup ? (<button className="btn btn-primary btn-xs pull-right"
                 onClick={ this.onAccepted }> Accept</button>) : null
@@ -59,15 +68,24 @@ export default class Group extends Component {
               this.props.owner ? (<button className="btn btn-primary btn-xs pull-right"
                 onClick={ this.onInviteForm }> Invite user </button>) : null
             }
-            <button className="btn btn-primary btn-xs pull-right"
-              onClick={ this.onClick }> Show users </button>
+            <button 
+              className="btn btn-primary btn-xs pull-right"
+              onClick={ this.onClick }> 
+              Show users 
+            </button>
             {
-              !this.props.referedGroup ? (<button className="btn btn-primary btn-xs pull-right"
-                onClick={ this.openMenuItems }> MenuItems </button>) : null
+              !this.props.referedGroup ? (
+                <button 
+                  className="btn btn-primary btn-xs pull-right"
+                  onClick={ this.openMenuItems }> 
+                  MenuItems 
+                </button>
+              ) : null
             }
           </p>
+          <p>Users list</p>
           { 
-            this.state.showUsers ? this.props.group.users.map((user)=>this.renderUser(user)) : null 
+            this.state.showUsers ? group.users.map((user)=>this.renderUser(user)) : null 
           }
         </div>
       </div>

@@ -1,11 +1,10 @@
 import React from 'react';
+import { Meteor } from 'meteor/meteor';
 import browserHistory from 'react-router/lib/browserHistory';
 import Router from 'react-router/lib/Router';
 import Route from 'react-router/lib/Route';
-import IndexRoute from 'react-router/lib/IndexRoute';
-import Redirect from 'react-router/lib/Redirect';
-
 import { render } from 'react-dom';
+
 import App from '../../ui/components/App.jsx';
 
 

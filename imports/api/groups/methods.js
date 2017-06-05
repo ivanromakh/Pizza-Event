@@ -1,7 +1,10 @@
-import { Groups } from './groups';
+import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
+import { FS } from 'meteor/cfs:base-package';
 
+import { Groups } from './groups';
 import { Images} from '../images/images';
+
 
 Meteor.methods({
   'groups.create'(name, url) {
@@ -23,12 +26,13 @@ Meteor.methods({
 
     var groupLogo = new FS.File();
     groupLogo.groupId = id;
-
-    groupLogo.attachData(url, function (error) {
-      if (error) throw new Meteor.Error('not-save-group-logo');
-      groupLogo.name("newImage.png");
-      Images.insert(groupLogo);
-    });
+    if(url) {
+      groupLogo.attachData(url, function (error) {
+        if (error) throw new Meteor.Error('not-save-group-logo');
+        groupLogo.name('newImage.png');
+        Images.insert(groupLogo);
+      });
+    }
   },
   'groups.inviteUser' (groupId, userId) {
     if (! Meteor.userId()) {
@@ -50,7 +54,7 @@ Meteor.methods({
     var username = user.profile ? user.profile.name : user.username;
 
     Groups.update({ 
-        _id: groupId, "invitations._id": {$exists: true}
+        _id: groupId, 'invitations._id': {$exists: true}
       }, { 
         $pull: {invitations: {_id: user._id}}
       }, false, true
@@ -79,7 +83,7 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
     Groups.update({ 
-        _id: groupId, "menuItems.name": {$exists: true}
+        _id: groupId, 'menuItems.name': {$exists: true}
       }, { 
         $pull: {menuItems: {name: itemName}}
       }, false, true);
@@ -97,8 +101,8 @@ Meteor.methods({
       throw new Meteor.Error('only-group-owner-can-change-coupons');
     }
 
-    Groups.update({_id: groupId, "menuItems.name": itemName}, 
-      {$set: {"menuItems.$.coupons": coupons}}
+    Groups.update({_id: groupId, 'menuItems.name': itemName}, 
+      {$set: {'menuItems.$.coupons': coupons}}
     );
   }
 });

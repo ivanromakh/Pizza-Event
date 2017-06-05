@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
@@ -28,7 +28,7 @@ class EventOrdering extends Component {
   }
 
   handleCountChange(event) {
-    this.setState({count: event.target.value});
+    this.setState({ count: event.target.value });
   }
 
   findElement(item) {
@@ -65,11 +65,17 @@ class EventOrdering extends Component {
         return x;
       });
 
-      var user = this.props.event.users.find(function(user){if(user._id == Meteor.userId()) return user.orders});
-  	  
+      var user = this.props.event.users.find(
+        function(user) {
+          if(user._id == Meteor.userId()) 
+            return user.orders
+        }
+      );
+
       if(!user){
         user = {orders: []};
       }
+      
       if(!user.orders){
         user.orders = [];
       }
@@ -84,28 +90,47 @@ class EventOrdering extends Component {
               <div className="events-head"> Count </div>
             </div>
             {
-              user.orders.map(function(order){ return <Order order={order} />; })
+              user.orders.map((order)=> <Order order={ order } />)
             }
           </div>
-          { this.props.event.status == 'ordering' ? (
-          <div className="create-order">
-            <form onSubmit={this.createOrder}>
-              <Select autofocus options={options}
-                name="selected-order"
-                disabled={this.state.disabled}
-                value={this.state.selectValue} onChange={this.handleSelectChange} 
-                searchable={this.state.searchable}
-              />
-              <label>
-                  Count:
-                  <input type="number" value={this.state.count} 
-                    onChange={this.handleCountChange} />
-              </label>
-              <input type="submit" value="add to order" />
-            </form>
-            <button onClick={this.ConfirmOrder}>Cofirm order</button>
-          </div>) : null }
-  	  	</div>
+          {
+            this.props.event.status == 'ordering' ? (
+              <div className="create-order">
+                <h3> Make your order </h3>
+                <form onSubmit={ this.createOrder } >
+                  <Select 
+                    className="select-order"
+                    autofocus 
+                    options={ options }
+                    name="selected-order"
+                    disabled={ this.state.disabled }
+                    value={ this.state.selectValue }
+                    onChange={ this.handleSelectChange } 
+                    searchable={ this.state.searchable }
+                  />
+                  <label>
+                    Count:
+                    <input
+                      type="number" 
+                      value={ this.state.count }
+                      onChange={ this.handleCountChange }
+                    />
+                  </label>
+                  <button
+                    className="btn btn-primary btn-xs" 
+                    type="submit"> 
+                    Add to order
+                  </button>
+                </form>
+              <button 
+                className="btn btn-primary btn-xs" 
+                onClick={ this.ConfirmOrder } >
+                Cofirm order
+              </button>
+            </div>
+          ) : null
+        }
+        </div>
   	  );
     }
     return <h1> Pleasure click "see orders" button on Event to see orders </h1>;

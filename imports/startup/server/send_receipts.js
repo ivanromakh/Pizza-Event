@@ -1,3 +1,6 @@
+import { Meteor } from 'meteor/meteor';
+import { Email } from 'meteor/email';
+
 import fillReceipt from './fill_receipts';
 
 function getEmailByUserId(userId) {
@@ -19,8 +22,8 @@ function getUserNameByUserId(userId) {
 function sendEmail(email, receipt) {
   Email.send({
     to: email,
-    from: "ivanrouman@gmail.com",
-    subject: "Pizza Ordering",
+    from: 'ivanrouman@gmail.com',
+    subject: 'Pizza Ordering',
     html: receipt,
   });
 }
@@ -28,10 +31,6 @@ function sendEmail(email, receipt) {
 function sendEmailCoWorker(user) {
   var email = getEmailByUserId(user._id);
   var username = getUserNameByUserId(user._id);
-
-  var receipt = "<h> Your orders is: </h>";
-  var orders = user.orders;
-
   var { receipt } = fillReceipt(user.orders, username, this.percents);
   
   sendEmail(email, receipt);
@@ -39,12 +38,12 @@ function sendEmailCoWorker(user) {
 
 exports.sendEmailsToCoWorkers = function(event, percents) {
   event.users.forEach(sendEmailCoWorker, {percents: percents });
-}
+};
 
 exports.sendEmailToGroupOwner = function(event, percents, groupOwnerId) {
   var email = getEmailByUserId(groupOwnerId);
   var totalPrice = 0;
-  var totalReceipt = "<h>Hello Group made this is all orders from your group</h1>";
+  var totalReceipt = '<h>Hello Group made this is all orders from your group</h1>';
 
   for(var x = 0; x < event.users.length; x++) {
     var orders = event.users[x].orders;
@@ -56,4 +55,4 @@ exports.sendEmailToGroupOwner = function(event, percents, groupOwnerId) {
   }
   totalReceipt += '<table style="background-color: #7ef07a; border-style: solid; border-radius: 10px; margin: 10px; padding:10px"><tr><td><p style="margin:0">Total price: ' + totalPrice.toFixed(2) + '</p></td></tr></table>';
   sendEmail(email, totalReceipt);
-}
+};

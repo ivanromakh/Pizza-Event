@@ -93,6 +93,17 @@ body {
   height: 30%;
 }
 
-.create-event {
-  display: l;
+.page--header {
+  text-align: center;
+}
+
+.create-group-form {
+  margin: 10px 0 10px 0;
+}
+
+.create-order {
+  margin: 10px;
+  padding: 10px;
+  border: 1px;
+  border-radius: 20px; 
 }

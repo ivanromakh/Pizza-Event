@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { TransitionView, Calendar } from 'react-date-picker';
 import 'react-date-picker/index.css';
 

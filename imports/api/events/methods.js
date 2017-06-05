@@ -1,4 +1,7 @@
+import { Meteor } from 'meteor/meteor';
+
 import { Events } from './events';
+
 
 Meteor.methods({
   'events.createEvent'(groupId, timestamp) {

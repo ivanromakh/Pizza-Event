@@ -2,17 +2,9 @@ import { Meteor } from 'meteor/meteor';
 
 import { Groups } from '../../api/groups/groups';
 import { Events } from '../../api/events/events';
-import { Email } from 'meteor/email';
 
 import {sendEmailsToCoWorkers, sendEmailToGroupOwner} from './send_receipts.js';
 
-
-function getUserOrders(user, event){
-  var user = event.users.find(function(user){
-    return user._id == this.userId 
-  }, { userId: user._id});
-  return user.orders;
-}
 
 function findItemsWithDiscount(disc, item) {
   if(item.coupons>0) {
@@ -49,7 +41,8 @@ function countOrders(orders) {
 }
 
 function findDicountPercents(discounts, countedOrders) {
-  var percents = []
+  var percents = [];
+
   for(var x = 0; x < countedOrders.length; x++) {
     for(var y = 0; y < discounts.length; y++) {
       if(discounts[y].name == countedOrders[x].name) {
@@ -63,7 +56,7 @@ function findDicountPercents(discounts, countedOrders) {
 
 function changeEventStatus(eventId) {
   Events.update({ _id: eventId },
-    { $set: {"status": 'ordered' } });
+    { $set: {'status': 'ordered' } });
 }
 
 function makeReceipts(event, group) {
@@ -82,7 +75,7 @@ function makeReceipts(event, group) {
 Meteor.setInterval(function() {
   var events = Events.find().fetch();
   if(events) {
-   	events.forEach(function(event) {
+    events.forEach(function(event) {
       var group = Groups.findOne({ _id: event.groupId });
       
       if(event.status == 'ordering') {
@@ -91,26 +84,26 @@ Meteor.setInterval(function() {
 
           var eventUsersId = event.users.map(function(user) { 
             if(user.confirm) {
-            	return user._id;
+              return user._id;
             }
           });
   
           // check if all users in group make order
           var isNotOrdered = usersId.find(function(userId) {
             var isOrdered = this.eventUsersId.find(function(eventUserId) {
-            	if(eventUserId == this.userId) { return true; }
+              if(eventUserId == this.userId) { return true; }
             }, { userId: userId });
-  
+
             if(!isOrdered) {
-             	return true;
+              return true;
             }
           }, { eventUsersId: eventUsersId });
-  
+
           var ordered = !isNotOrdered;
-  
-          (ordered) ? makeReceipts(event, group) : console.log('not all oredered');
+
+          (ordered) ? makeReceipts(event, group) : null;
         }
       }
-  	});
+    });
   }
 }, 10000);

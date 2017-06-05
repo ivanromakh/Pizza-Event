@@ -1,3 +1,5 @@
+import { Meteor } from 'meteor/meteor';
+
 
 Meteor.methods({
   'user.inviteGroup'(userId, groupId) {
@@ -17,7 +19,7 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
-    Meteor.users.update({_id: userId}, {$pull: {"invitations": {_id: groupId}}});
+    Meteor.users.update({_id: userId}, {$pull: {invitations: {_id: groupId}}});
     Meteor.users.update({_id: userId}, {$addToSet: {groups: {_id: groupId}}});
   },
 
