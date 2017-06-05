@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
@@ -24,13 +25,13 @@ class App extends Component {
             <h1 className='page--header'> Pizza Ordering </h1>
             <PizzaEvents group={ group } events={ events } />
             <MenuItems group={ group } />
-  	      </div>
+          </div>
           <div className="col-md-4 page--column">
-  	        <AccountUiWrapper />
-  	        <CreateGroupForm />
-  	        <ShowClientGroups />
-  	      </div>
-	      </div>
+            <AccountUiWrapper />
+            <CreateGroupForm />
+            <ShowClientGroups />
+          </div>
+        </div>
       </div>
     );
   }
@@ -55,7 +56,7 @@ export default createContainer(() => {
   }
   
   return {
-      group: group,
-      events: events,
+    group: group,
+    events: events,
   };
 }, App);

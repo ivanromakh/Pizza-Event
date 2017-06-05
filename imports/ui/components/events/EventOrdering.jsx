@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import Select from 'react-select';
@@ -49,9 +50,9 @@ class EventOrdering extends Component {
   }
 
   render() {
-  	if(Meteor.user().activeEvent && this.props.event) {
-  	  var time = new Date(this.props.event.date).toString();
-  	  var menuItems = this.props.group.menuItems;
+    if(Meteor.user().activeEvent && this.props.event) {
+      var time = new Date(this.props.event.date);
+      var menuItems = this.props.group.menuItems;
 
       if(!menuItems){
         menuItems = [];
@@ -68,7 +69,7 @@ class EventOrdering extends Component {
       var user = this.props.event.users.find(
         function(user) {
           if(user._id == Meteor.userId()) 
-            return user.orders
+            return user.orders;
         }
       );
 
@@ -81,9 +82,9 @@ class EventOrdering extends Component {
       }
 
       return (
-  	  	<div>
-  	  	  <h1> Event {time} orders </h1>
-          <div className="events-table">
+        <div>
+          <h1 className="centered"> Event { time.toUTCString() } orders </h1>
+          <div className="events-table"> 
             <div className="events-row">
               <div className="events-head"> Name </div>
               <div className="events-head"> Price </div>
@@ -93,7 +94,12 @@ class EventOrdering extends Component {
               user.orders.map((order)=> <Order order={ order } />)
             }
           </div>
-          {
+          <button 
+            className="btn btn-primary btn-xs" 
+            onClick={ this.ConfirmOrder } >
+            Cofirm order
+          </button>
+          { 
             this.props.event.status == 'ordering' ? (
               <div className="create-order">
                 <h3> Make your order </h3>
@@ -122,16 +128,11 @@ class EventOrdering extends Component {
                     Add to order
                   </button>
                 </form>
-              <button 
-                className="btn btn-primary btn-xs" 
-                onClick={ this.ConfirmOrder } >
-                Cofirm order
-              </button>
             </div>
-          ) : null
-        }
+            ) : null
+          }
         </div>
-  	  );
+      );
     }
     return <h1> Pleasure click "see orders" button on Event to see orders </h1>;
   }
@@ -139,12 +140,15 @@ class EventOrdering extends Component {
 
 export default createContainer(() => {
   Meteor.subscribe('events');
+
+  var event = {};
   
   if(Meteor.user() && Meteor.user().activeEvent) {
     var activeEvent = Meteor.user().activeEvent;
-    return {
-      event: Events.findOne({_id: activeEvent}),
-    }
+    event = Events.findOne({_id: activeEvent});
   }
-  return {};
+
+  return {
+    event: event,
+  };
 }, EventOrdering);

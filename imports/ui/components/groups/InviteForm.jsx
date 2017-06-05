@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { createContainer } from 'meteor/react-meteor-data';
@@ -32,7 +33,7 @@ class InviteForm extends Component {
 
   render() {
     var options = this.props.users.map(function(user) {
-      option = {};
+      var option = {};
       option.value = user._id;
       option.label = user.profile ? user.profile.name : user.username;
       return option;

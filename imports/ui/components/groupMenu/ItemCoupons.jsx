@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
@@ -17,12 +18,11 @@ export default class ItemCoupons extends Component {
     var name = this.props.name;
     var coupons = this.state.coupons;
 
-    Meteor.call('groups.setCoupons', groupId, name, coupons)
+    Meteor.call('groups.setCoupons', groupId, name, coupons);
   }
 
   handleCouponsChange(event) {
-    this.setState({coupons: event.target.value});
-    console.log(this.state.coupons);
+    this.setState({ coupons: event.target.value });
   }
 
   render() {
@@ -31,14 +31,16 @@ export default class ItemCoupons extends Component {
       return (
         <div className="menu-item-coupon"> 
           <input type="number" value={this.state.coupons}
-            onChange={this.handleCouponsChange} />
-          <button className="btn btn-primary btn-xs" onClick={this.setCoupons}> 
+            onChange={ this.handleCouponsChange } />
+          <button 
+            className="btn btn-primary btn-xs" 
+            onClick={ this.setCoupons } > 
             Set 
           </button> 
         </div>
-        );
+      );
     }
-    return <div className="menu-item-coupon"> {this.state.coupons} </div>;
+    return <div className="menu-item-coupon"> { this.state.coupons } </div>;
   }
 }
 

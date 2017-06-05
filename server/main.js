@@ -12,17 +12,8 @@ import '../imports/api/users/methods.js';
 import '../imports/api/images/images.js';
 import '../imports/api/images/publications.js';
 import '../imports/startup/server/check_ordering.js';
+import '../imports/startup/server/service-configuration.js';
 
 
 Meteor.startup(function () {
-  process.env.MAIL_URL = Meteor.settings.smtp;
-
-  Accounts.config({
-    sendVerificationEmail: true
-  });
-
-  ServiceConfiguration.configurations.upsert(
-    { service: "google" },
-    { $set: Meteor.settings.google }
-  );
 });

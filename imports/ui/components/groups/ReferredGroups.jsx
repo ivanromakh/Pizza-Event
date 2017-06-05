@@ -1,8 +1,10 @@
+import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { createContainer } from 'meteor/react-meteor-data';
 
 import { Groups } from '../../../api/groups/groups';
+
 import Group from './Group.jsx';
 
 class ReferredGroups extends Component {
@@ -56,5 +58,5 @@ export default createContainer(() => {
   return {
     user: user,
     groups: groups,
-  }
+  };
 }, ReferredGroups);

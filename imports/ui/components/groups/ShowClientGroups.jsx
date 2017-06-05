@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { createContainer } from 'meteor/react-meteor-data';
@@ -87,7 +88,7 @@ export default createContainer(() => {
   
   ownerGroups.map(function(group) {
     var image = Images.findOne({ groupId: group._id });
-    console.log('image', image);
+    
     if(image){
       group.logo = image.url();
     }

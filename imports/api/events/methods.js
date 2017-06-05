@@ -11,9 +11,9 @@ Meteor.methods({
     }
 
     Events.insert({
-        groupId: groupId,
-        date: timestamp,
-        status: "ordering",
+      groupId: groupId,
+      date: timestamp,
+      status: 'ordering',
     });
   },
 
@@ -23,7 +23,7 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
-    Events.update({_id: eventId}, {$addToSet: {users: {_id: userId}}});
+    Events.update({ _id: eventId }, { $addToSet: { users: { _id: userId } } });
   },
 
   'events.createOrder'(eventId, orderName, orderPrice, orderCount) {
@@ -32,17 +32,28 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
-    Events.update({_id: eventId, "users._id": userId}, 
-      {$push: {"users.$.orders": {name: orderName, price: orderPrice, count: orderCount}}});
+    Events.update(
+      { _id: eventId, 'users._id': userId }, 
+      { $push: { 
+        'users.$.orders': { 
+          name: orderName, 
+          price: orderPrice, 
+          count: orderCount 
+        } 
+      }}
+    );
   },
 
   'events.confirmOrder'(eventId) {
     let userId = Meteor.userId();
+
     if (!userId) {
       throw new Meteor.Error('not-authorized');
     }
-    console.log('ffff', userId);
-    Events.update({_id: eventId, "users._id": userId},
-      {$set: {"users.$.confirm": true}});
+
+    Events.update(
+      { _id: eventId, 'users._id': userId},
+      { $set: { 'users.$.confirm': true }}
+    );
   }
 });

@@ -1,5 +1,5 @@
+import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 
 
 export default class CreateGroupForm extends Component {
@@ -26,7 +26,7 @@ export default class CreateGroupForm extends Component {
     var name = this.state.groupName;
 
     if (Meteor.userId()) {
-      var groupId = Meteor.call('groups.create', name, this.state.imagePreviewUrl);
+      Meteor.call('groups.create', name, this.state.imagePreviewUrl);
       this.toggleForm();
     }
     this.setState({ groupName: '' });
@@ -38,13 +38,13 @@ export default class CreateGroupForm extends Component {
     let reader = new FileReader();
     let file = event.target.files[0];
     
-    
     reader.onloadend = () => {
       this.setState({
         file: file,
         imagePreviewUrl: reader.result
       });
-    }
+    };
+
     reader.readAsDataURL(file);
   }
 

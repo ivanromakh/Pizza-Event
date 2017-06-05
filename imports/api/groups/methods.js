@@ -18,10 +18,10 @@ Meteor.methods({
     var username = (user.profile) ? user.profile.name : user.username;
 
     var id = Groups.insert({
-        name,
-        owner: userId,
-        username: Meteor.user().username,
-        users: [{_id: userId, username: username}],
+      name,
+      owner: userId,
+      username: Meteor.user().username,
+      users: [{_id: userId, username: username}],
     });
 
     var groupLogo = new FS.File();
@@ -40,11 +40,10 @@ Meteor.methods({
     }
 
     Groups.update({
-        _id: groupId
-      }, {
-        $addToSet: {invitations: {_id: userId}}
-      }
-    );
+      _id: groupId
+    }, {
+      $addToSet: {invitations: {_id: userId}}
+    });
   },
 
   'groups.acceptUser' (groupId, user) {
@@ -54,18 +53,16 @@ Meteor.methods({
     var username = user.profile ? user.profile.name : user.username;
 
     Groups.update({ 
-        _id: groupId, 'invitations._id': {$exists: true}
-      }, { 
-        $pull: {invitations: {_id: user._id}}
-      }, false, true
-    );
+      _id: groupId, 'invitations._id': {$exists: true}
+    }, { 
+      $pull: {invitations: {_id: user._id}}
+    }, false, true);
 
     Groups.update({
-        _id: groupId
-      }, {
-        $addToSet: {users: {_id: user._id, username: username}}
-      }
-    );
+      _id: groupId
+    }, {
+      $addToSet: {users: {_id: user._id, username: username}}
+    });
   },
 
   'groups.addMenuItem'(groupId, name, price) {
@@ -74,8 +71,10 @@ Meteor.methods({
     }
 
     Groups.update({
-        _id: groupId
-      }, {$addToSet: {menuItems: {name: name, price: price, coupons: 0}}});
+      _id: groupId
+    }, {
+      $addToSet: {menuItems: {name: name, price: price, coupons: 0}}
+    });
   },
 
   'groups.removeMenuItem'(groupId, itemName) {
@@ -83,10 +82,10 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
     Groups.update({ 
-        _id: groupId, 'menuItems.name': {$exists: true}
-      }, { 
-        $pull: {menuItems: {name: itemName}}
-      }, false, true);
+      _id: groupId, 'menuItems.name': {$exists: true}
+    }, { 
+      $pull: {menuItems: {name: itemName}}
+    }, false, true);
   },
 
   'groups.setCoupons'(groupId, itemName, coupons) {

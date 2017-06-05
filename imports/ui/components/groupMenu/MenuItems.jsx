@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
@@ -11,7 +12,7 @@ export default class MenuItems extends Component {
     this.state = {
       itemName: '',
       itemPrice: '',
-    }
+    };
 
     this.addNewItem = this.addNewItem.bind(this);
     this.handleNameChange = this.handleNameChange.bind(this);
@@ -48,7 +49,7 @@ export default class MenuItems extends Component {
         />
       );
     } else {
-      return null
+      return null;
     }
   }
 

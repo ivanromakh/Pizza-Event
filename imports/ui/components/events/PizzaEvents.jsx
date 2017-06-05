@@ -1,58 +1,59 @@
+import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
 import { TransitionView, Calendar } from 'react-date-picker';
 import 'react-date-picker/index.css';
 
-import EventOrdering from './EventOrdering'
+import EventOrdering from './EventOrdering';
 import Event from './Event';
 
 export default class PizzaEvents extends Component {
   constructor(props) {
-  	super(props);
-  	this.state = {
-  		toggleEventForm: false,
-  		timestamp: new Date().getTime(),
-  	}
+    super(props);
+    this.state = {
+      toggleEventForm: false,
+      timestamp: new Date().getTime(),
+    };
     
     this.toggleCreateEventForm = this.toggleCreateEventForm.bind(this);
     this.onCalendarChange = this.onCalendarChange.bind(this);
     this.createPizzaEvent = this.createPizzaEvent.bind(this);
   }
 
-  onCalendarChange(dateString, { dateMoment, timestamp }) {
-    this.setState({timestamp: timestamp});
+  onCalendarChange(dateString, { timestamp }) {
+    this.setState({ timestamp: timestamp });
   }
 
   toggleCreateEventForm() {
-    this.setState({toggleEventForm: !this.state.toggleEventForm}); 
+    this.setState({ toggleEventForm: !this.state.toggleEventForm }); 
   }
 
   
   createPizzaEvent(event) {
-  	event.preventDefault();
-  	var groupId = this.props.group._id;
-    Meteor.call("events.createEvent", groupId, this.state.timestamp);
+    event.preventDefault();
+    var groupId = this.props.group._id;
+    Meteor.call('events.createEvent', groupId, this.state.timestamp);
     this.toggleCreateEventForm();
   }
 
   renderGroupEvents() {
-  	var events = this.props.events;
+    var events = this.props.events;
     return events.map((event)=>(
-      <Event key={event._id} event={event} />
+      <Event key={ event._id } event={ event } />
     ));  
   }
 
   renderEventCreateForm() {
-  	if(this.state.toggleEventForm){
-      var tTime = new Date().toLocaleString("en-GB");
-  	  return (
+    if(this.state.toggleEventForm){
+      var tTime = new Date().toLocaleString('en-GB');
+      return (
         <div className="create-event">
-          <form className="clock" onSubmit={this.createPizzaEvent}>
+          <form className="clock" onSubmit={ this.createPizzaEvent }>
             <h3> Create “Pizza day” event </h3>
-       	    <TransitionView>
+            <TransitionView>
               <Calendar
-                dateFormat="DD/MM/YYYY HH:mm:ss"
-                defaultDate={tTime}
-                onChange={this.onCalendarChange}
+                dateFormat='DD/MM/YYYY HH:mm:ss'
+                defaultDate={ tTime }
+                onChange={ this.onCalendarChange }
               />
             </TransitionView>
             <span>
@@ -62,11 +63,17 @@ export default class PizzaEvents extends Component {
         </div>
       );
     }
-    return <button className="btn btn-primary btn-xs" onClick={this.toggleCreateEventForm}> Click to to create event </button>;
+    return (
+      <button 
+        className="btn btn-primary btn-xs create-event-date"
+        onClick={ this.toggleCreateEventForm }> 
+        Click to create event
+      </button>
+      );
   }
 
   render() {
-  	if(this.props.group && this.props.group._id) {
+    if(this.props.group && this.props.group._id) {
       return (
         <div className="events-column">
           {this.renderEventCreateForm()}
@@ -78,7 +85,7 @@ export default class PizzaEvents extends Component {
             </div>
             {this.renderGroupEvents()}
           </div>
-          <EventOrdering group={this.props.group}/>
+          <EventOrdering group={ this.props.group } />
         </div>
       );
     } else {

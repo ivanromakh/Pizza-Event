@@ -1,5 +1,7 @@
+import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import InviteForm from './InviteForm';
 
 
@@ -20,7 +22,7 @@ export default class Group extends Component {
   }
 
   renderUser(user) {
-    return <p key={ user._id }> { user.username } </p>
+    return (<p key={ user._id }> { user.username } </p>);
   }
 
   // Group owner open invite form
