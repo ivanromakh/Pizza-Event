@@ -55,5 +55,33 @@ Meteor.methods({
       { _id: eventId, 'users._id': userId},
       { $set: { 'users.$.confirm': true }}
     );
+  },
+
+  'events.changeStatus'(eventId) {
+    let userId = Meteor.userId();
+
+    if (!userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    var event = Events.findOne({ _id: eventId });
+
+    var update = false;
+    var status = '';
+
+    if(event.status && event.status == 'ordered') {
+      status = 'delivering';
+      update = true;
+    } else if(event.status && event.status == 'delivering') {
+      status = 'delivered';
+      update = true;
+    } 
+    
+    if(update == true) {
+      Events.update(
+        { _id: eventId},
+        { $set: { status: status }}
+      );
+    }
   }
 });

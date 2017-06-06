@@ -9,6 +9,7 @@ import Event from './Event';
 export default class PizzaEvents extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       toggleEventForm: false,
       timestamp: new Date().getTime(),
@@ -38,7 +39,10 @@ export default class PizzaEvents extends Component {
   renderGroupEvents() {
     var events = this.props.events;
     return events.map((event)=>(
-      <Event key={ event._id } event={ event } />
+      <Event 
+        key={ event._id } 
+        event={ event }
+        owner={ this.props.group.owner } />
     ));  
   }
 

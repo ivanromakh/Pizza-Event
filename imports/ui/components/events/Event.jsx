@@ -7,6 +7,7 @@ export default class Event extends Component {
 
     this.confirmEvent = this.confirmEvent.bind(this);
     this.setActiveOrder = this.setActiveOrder.bind(this);
+    this.changeStatus = this.changeStatus.bind(this);
   }
 
   confirmEvent() {
@@ -22,22 +23,56 @@ export default class Event extends Component {
     Meteor.call('user.setActiveEvent', this.props.event._id);
   }
 
-  renderActions() {
+  changeStatus() {
     var event = this.props.event;
+    Meteor.call('events.changeStatus', event._id)
+  }
 
-    if(event.users && event.users.find(this.checkUser)) {
-      return (
-          <button className="btn btn-primary btn-xs" onClick={this.setActiveOrder}> 
-            See orders
-          </button>
-      );
-    } 
+  showOrdersButton() {
+    return (
+      <button className="btn btn-primary btn-xs" onClick={this.setActiveOrder}> 
+        See orders
+      </button>
+    );
+  }
 
+  changeStatusButton() {
+    return (
+      <button className="btn btn-primary btn-xs" onClick={this.changeStatus}> 
+        Change status
+      </button>
+    );
+  }
+
+  confirmButton() {
     return (
       <button className="btn btn-primary btn-xs" onClick={this.confirmEvent}> 
         Confirm
       </button>
     );
+  }
+
+  renderActions() {
+    var event = this.props.event;
+
+    if(event.users && event.users.find(this.checkUser)) {
+      if(this.props.owner == Meteor.userId()) {
+        return (
+          <div>
+            { this.showOrdersButton() }
+            { this.changeStatusButton() }
+          </div>
+        );
+      } else {
+        return (
+          <div>
+            { this.showOrdersButton() }
+          </div>
+        );
+      }
+    }
+
+    return <div>{ this.confirmButton() }</div>; 
   }
 
   render() {
@@ -49,7 +84,7 @@ export default class Event extends Component {
         <div className="event-date"> { time.toUTCString() } </div>
         <div className="event-status"> { event.status } </div>
         <div className="event-actions">
-          {this.renderActions()}
+          { this.renderActions() }
         </div>
       </div>
     );
