@@ -84,7 +84,7 @@ export default createContainer(() => {
     if(image) {
       group.logo = image.url();
     }
-  }, {Images: Images});
+  }, { Images: Images });
   
   ownerGroups.map(function(group) {
     var image = Images.findOne({ groupId: group._id });
@@ -92,7 +92,7 @@ export default createContainer(() => {
     if(image){
       group.logo = image.url();
     }
-  }, {Images: Images});
+  }, { Images: Images });
 
   return {
     user: Meteor.users.findOne({ _id: Meteor.userId() }) || { groups: [] },

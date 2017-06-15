@@ -1,24 +1,28 @@
 import { Meteor } from 'meteor/meteor';
-
+import { check } from 'meteor/check';
 import { Events } from './events';
 
 
 Meteor.methods({
   'events.createEvent'(groupId, timestamp) {
+    check(groupId, String);
+    check(timestamp, Number);
 
-    if (! Meteor.userId()) {
+    if (!Meteor.userId()) {
       throw new Meteor.Error('not-authorized');
     }
 
     Events.insert({
-      groupId: groupId,
+      groupId,
       date: timestamp,
       status: 'ordering',
     });
   },
 
   'events.confirmUser'(eventId) {
-    let userId = Meteor.userId();
+    check(eventId, String);
+
+    const userId = Meteor.userId();
     if (!userId) {
       throw new Meteor.Error('not-authorized');
     }
@@ -27,61 +31,72 @@ Meteor.methods({
   },
 
   'events.createOrder'(eventId, orderName, orderPrice, orderCount) {
-    let userId = Meteor.userId();
+    check(eventId, String);
+    check(orderName, String);
+    check(orderPrice, Number);
+    check(orderCount, Number);
+
+    const userId = Meteor.userId();
+
     if (!userId) {
       throw new Meteor.Error('not-authorized');
     }
 
-    Events.update(
-      { _id: eventId, 'users._id': userId }, 
-      { $push: { 
-        'users.$.orders': { 
-          name: orderName, 
-          price: orderPrice, 
-          count: orderCount 
-        } 
-      }}
-    );
+    Events.update({
+      _id: eventId, 'users._id': userId,
+    }, {
+      $push: {
+        'users.$.orders': {
+          name: orderName,
+          price: orderPrice,
+          count: orderCount,
+        },
+      },
+    });
   },
 
   'events.confirmOrder'(eventId) {
-    let userId = Meteor.userId();
+    check(eventId, String);
+
+    const userId = Meteor.userId();
 
     if (!userId) {
       throw new Meteor.Error('not-authorized');
     }
 
     Events.update(
-      { _id: eventId, 'users._id': userId},
-      { $set: { 'users.$.confirm': true }}
+      { _id: eventId, 'users._id': userId },
+      { $set: { 'users.$.confirm': true } },
     );
   },
 
   'events.changeStatus'(eventId) {
-    let userId = Meteor.userId();
+    check(eventId, String);
+
+    const userId = Meteor.userId();
 
     if (!userId) {
       throw new Meteor.Error('not-authorized');
     }
 
-    var event = Events.findOne({ _id: eventId });
+    const event = Events.findOne({ _id: eventId });
 
-    var update = false;
-    var status = '';
+    let update = false;
+    let status = '';
 
-    if(event.status && event.status == 'ordered') {
+    if (event.status && event.status === 'ordered') {
       status = 'delivering';
       update = true;
-    } else if(event.status && event.status == 'delivering') {
+    } else if (event.status && event.status === 'delivering') {
       status = 'delivered';
       update = true;
-    } 
-    
-    if(update == true) {
+    }
+
+    if (update === true) {
       Events.update(
-        { _id: eventId},
-        { $set: { status: status }}
+        { _id: eventId },
+        { $set: { status } },
       );
     }
-  }
+  },
 });

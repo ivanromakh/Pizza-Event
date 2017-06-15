@@ -10,7 +10,7 @@ import App from '../../ui/components/App.jsx';
 
 export const renderRoutes = () => (
   <Router history={browserHistory}>
-    <Route path="/" component={App}/>
+    <Route path="/" component={App} />
   </Router>
 );
 

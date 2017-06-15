@@ -11,7 +11,7 @@ class EventOrdering extends Component {
   constructor(props){
     super(props);
 
-    this.state = {selectValue: '', count: '', price: '', disabled: false};
+    this.state = {selectValue: '', count: 0, price: 0, disabled: false};
 
     this.createOrder = this.createOrder.bind(this);
     this.handleCountChange = this.handleCountChange.bind(this);
@@ -22,7 +22,8 @@ class EventOrdering extends Component {
   createOrder(event) {
     event.preventDefault();
     var eventId = this.props.event._id;
-    var count = this.state.count;
+    console.log(typeof this.state.count);
+    var count = parseInt(this.state.count);
     var selectValue = this.state.selectValue;
     Meteor.call('events.createOrder', 
       eventId, selectValue.value, selectValue.price, count);

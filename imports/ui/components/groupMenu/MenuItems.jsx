@@ -11,7 +11,7 @@ export default class MenuItems extends Component {
     
     this.state = {
       itemName: '',
-      itemPrice: '',
+      itemPrice: 0,
     };
 
     this.addNewItem = this.addNewItem.bind(this);
@@ -30,8 +30,9 @@ export default class MenuItems extends Component {
   addNewItem(event) {
     event.preventDefault();
     var name = this.state.itemName;
-    var price = this.state.itemPrice;
-
+    console.log('price: ', this.state.itemPrice);
+    var price = parseInt(this.state.itemPrice);
+ 
     Meteor.call('groups.addMenuItem', this.props.group._id, name, price);
     this.setState({ itemName: '', itemPrice: '' });
     return null;
@@ -82,7 +83,8 @@ export default class MenuItems extends Component {
               <input
                 value={ this.state.itemPrice } 
                 className="form-control" 
-                type="text"
+                type="number"
+                min="1"
                 onChange={ this.handlePriceChange }
               />
             </div>

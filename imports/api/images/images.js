@@ -2,19 +2,19 @@ import { FS } from 'meteor/cfs:base-package';
 
 
 export const Images = new FS.Collection('images', {
-  stores: [new FS.Store.FileSystem('images')]
+  stores: [new FS.Store.FileSystem('images')],
 });
 
 Images.allow({
-  'update': function () {
-    return true;
-  },
-  
-  'download': function() {
+  'update'() {
     return true;
   },
 
-  'insert': function () {
+  'download'() {
     return true;
-  }
+  },
+
+  'insert'() {
+    return true;
+  },
 });

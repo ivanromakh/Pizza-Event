@@ -3,105 +3,124 @@ import { check } from 'meteor/check';
 import { FS } from 'meteor/cfs:base-package';
 
 import { Groups } from './groups';
-import { Images} from '../images/images';
+import { Images } from '../images/images';
 
 
 Meteor.methods({
   'groups.create'(name, url) {
     check(name, String);
-    var userId = Meteor.userId();
-    var user = Meteor.user();
+    check(url, String);
+
+    const userId = Meteor.userId();
+    const user = Meteor.user();
 
     if (!userId) {
       throw new Meteor.Error('not-authorized');
     }
-    var username = (user.profile) ? user.profile.name : user.username;
+    const username = (user.profile) ? user.profile.name : user.username;
 
-    var id = Groups.insert({
+    const id = Groups.insert({
       name,
       owner: userId,
       username: Meteor.user().username,
-      users: [{_id: userId, username: username}],
+      users: [{ _id: userId, username }],
     });
 
-    var groupLogo = new FS.File();
+    const groupLogo = new FS.File();
     groupLogo.groupId = id;
-    if(url) {
-      groupLogo.attachData(url, function (error) {
+    if (url) {
+      groupLogo.attachData(url, function insertLogo(error) {
         if (error) throw new Meteor.Error('not-save-group-logo');
         groupLogo.name('newImage.png');
         Images.insert(groupLogo);
       });
     }
   },
-  'groups.inviteUser' (groupId, userId) {
-    if (! Meteor.userId()) {
+  'groups.inviteUser'(groupId, userId) {
+    check(groupId, String);
+    check(userId, String);
+    if (!Meteor.userId()) {
       throw new Meteor.Error('not-authorized');
     }
 
     Groups.update({
-      _id: groupId
+      _id: groupId,
     }, {
-      $addToSet: {invitations: {_id: userId}}
+      $addToSet: { invitations: { _id: userId } },
     });
   },
 
-  'groups.acceptUser' (groupId, user) {
-    if (! Meteor.userId()) {
+  'groups.acceptUser'(groupId, user) {
+    check(groupId, String);
+    check(user, String);
+
+    if (!Meteor.userId()) {
       throw new Meteor.Error('not-authorized');
     }
-    var username = user.profile ? user.profile.name : user.username;
 
-    Groups.update({ 
-      _id: groupId, 'invitations._id': {$exists: true}
-    }, { 
-      $pull: {invitations: {_id: user._id}}
+    const username = user.profile ? user.profile.name : user.username;
+
+    Groups.update({
+      _id: groupId, 'invitations._id': { $exists: true },
+    }, {
+      $pull: { invitations: { _id: user._id } },
     }, false, true);
 
     Groups.update({
-      _id: groupId
+      _id: groupId,
     }, {
-      $addToSet: {users: {_id: user._id, username: username}}
+      $addToSet: { users: { _id: user._id, username } },
     });
   },
 
   'groups.addMenuItem'(groupId, name, price) {
-    if (! Meteor.userId()) {
+    check(groupId, String);
+    check(name, String);
+    check(price, Number);
+
+    if (!Meteor.userId()) {
       throw new Meteor.Error('not-authorized');
     }
 
     Groups.update({
-      _id: groupId
+      _id: groupId,
     }, {
-      $addToSet: {menuItems: {name: name, price: price, coupons: 0}}
+      $addToSet: { menuItems: { name, price, coupons: 0 } },
     });
   },
 
   'groups.removeMenuItem'(groupId, itemName) {
-    if (! Meteor.userId()) {
+    check(groupId, String);
+    check(itemName, String);
+
+    if (!Meteor.userId()) {
       throw new Meteor.Error('not-authorized');
     }
-    Groups.update({ 
-      _id: groupId, 'menuItems.name': {$exists: true}
-    }, { 
-      $pull: {menuItems: {name: itemName}}
+    Groups.update({
+      _id: groupId, 'menuItems.name': { $exists: true },
+    }, {
+      $pull: { menuItems: { name: itemName } },
     }, false, true);
   },
 
   'groups.setCoupons'(groupId, itemName, coupons) {
-    var userId = Meteor.userId();
-    if (! userId) {
+    check(groupId, String);
+    check(itemName, String);
+    check(coupons, String);
+
+    const userId = Meteor.userId();
+    if (!userId) {
       throw new Meteor.Error('not-authorized');
     }
 
-    var group = Groups.findOne({_id: groupId});
+    const group = Groups.findOne({ _id: groupId });
 
-    if(group.owner != userId){
+    if (group.owner !== userId) {
       throw new Meteor.Error('only-group-owner-can-change-coupons');
     }
 
-    Groups.update({_id: groupId, 'menuItems.name': itemName}, 
-      {$set: {'menuItems.$.coupons': coupons}}
+    Groups.update({ _id: groupId, 'menuItems.name': itemName },
+      { $set: { 'menuItems.$.coupons': coupons } },
     );
-  }
+  },
 });

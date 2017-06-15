@@ -54,6 +54,8 @@ export default createContainer(() => {
     group = Groups.findOne({ _id: activeGroup });
     events = Events.find({ groupId: activeGroup }).fetch();
   }
+
+  console.log('activeGroup: ', group);
   
   return {
     group: group,
