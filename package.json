@@ -46,6 +46,10 @@
     "plugins": [
       "meteor"
     ],
+    "globals": {
+        "Assets": true,
+        "document": true
+    },
     "extends": [
       "airbnb",
       "plugin:meteor/recommended"

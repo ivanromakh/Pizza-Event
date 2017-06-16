@@ -26,3 +26,5 @@ cfs:standard-packages
 cfs:filesystem
 email
 service-configuration
+meteorhacks:ssr
+cfs:base-package

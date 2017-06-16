@@ -18,11 +18,27 @@ const getItemsWithDiscount = function getItemsWithDiscount(group) {
 };
 
 const uniteOrders = function uniteOrders(orders, user) {
-  return orders.concat(user.orders);
+  return [...orders, ...user.orders];
 };
 
 const getEventOrders = function getEventOrders(event) {
   return event.users.reduce(uniteOrders, []);
+};
+
+const getEmailByUserId = function getEmailByUserId(userId) {
+  const user = Meteor.users.findOne({ _id: userId });
+  const email = user.profile
+    ? user.services.google.email
+    : user.emails[0].address;
+  return email;
+};
+
+const getUserNameByUserId = function getUserNameByUserId(userId) {
+  const user = Meteor.users.findOne({ _id: userId });
+  const username = user.profile
+    ? user.profile.name
+    : user.username;
+  return username;
 };
 
 const itemsCountWithDiscount = function itemsCountWithDiscount(items, discounts) {
@@ -33,14 +49,11 @@ const itemsCountWithDiscount = function itemsCountWithDiscount(items, discounts)
       const item = {};
 
       const discountItems = items.filter((dicItem) => dicItem.name === discount.name);
-      const count = discountItems.reduce((prev, dicItem) =>
-        prev + dicItem.count
-      , 0);
+      const count = discountItems.reduce((prev, dicItem) => prev + dicItem.count, 0);
 
       item.name = discount.name;
       item.count = count;
       item.coupons = discount.coupons;
-
       return item;
     });
   }
@@ -62,14 +75,44 @@ const changeEventStatus = function changeEventStatus(eventId) {
     { $set: { status: 'ordered' } });
 };
 
+const calcPrice = function calcPrice(itemsData, username, allPercents) {
+  let orderPrice = 0;
+  const items = itemsData.map((item) => {
+    let itemData = { name: item.name, count: item.count };
+    const percent = allPercents.find((perc) => perc.name === item.name);
+    if (percent) {
+      itemData.price = item.price * item.count * percent.percent;
+    } else {
+      itemData.price = item.price * item.count;
+    }
+    orderPrice += item.price;
+    return itemData;
+  });
+  return { items, orderPrice, username };
+};
+
+const getOrdersData = function getOrdersData(event, percents) {
+  let totalPrice = 0;
+  const orders = event.users.reduce((result, user) => {
+    const email = getEmailByUserId(user._id);
+    const username = getUserNameByUserId(user._id);
+    const order = calcPrice(user.orders, username, percents);
+    totalPrice += order.orderPrice;
+    result.push({ order, email, username, userId: user._id });
+    return result;
+  }, []);
+  return { orders, totalPrice };
+};
+
 const makeReceipts = function makeReceipts(event, group) {
   const discounts = getItemsWithDiscount(group);
   const items = getEventOrders(event);
   const countedItems = itemsCountWithDiscount(items, discounts);
   const percents = findDicountPercents(countedItems);
+  const { orders, totalPrice } = getOrdersData(event, percents);
 
-  sendEmailsToCoWorkers(event, percents);
-  sendEmailToGroupOwner(event, percents, group.owner);
+  sendEmailsToCoWorkers(orders);
+  sendEmailToGroupOwner(orders, totalPrice, group.owner);
 
   changeEventStatus(event._id);
 };
@@ -94,18 +137,18 @@ Meteor.setInterval(() => {
 
           // check if all users in group make order
           const isNotOrdered = usersId.find((userId) => {
-            const isOrdered = this.eventUsersId.find((eventUserId) => {
-              if (eventUserId === this.userId) {
+            const isOrdered = eventUsersId.find((eventUserId) => {
+              if (eventUserId === userId) {
                 return true;
               }
               return false;
-            }, { userId });
+            });
 
             if (!isOrdered) {
               return true;
             }
             return false;
-          }, { eventUsersId });
+          });
 
           const ordered = !isNotOrdered;
 

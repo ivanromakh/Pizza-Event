@@ -52,7 +52,7 @@ Meteor.methods({
 
   'groups.acceptUser'(groupId, user) {
     check(groupId, String);
-    check(user, String);
+    check(user, Object);
 
     if (!Meteor.userId()) {
       throw new Meteor.Error('not-authorized');

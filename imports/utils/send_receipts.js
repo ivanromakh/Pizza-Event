@@ -1,7 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import { Email } from 'meteor/email';
+import { SSR } from 'meteor/meteorhacks:ssr';
 
-import fillReceipt from './fill_receipts';
+SSR.compileTemplate('emailToCoWorker', Assets.getText('emailToCoWorker.html'));
+SSR.compileTemplate('emailToGroupOwner', Assets.getText('emailToGroupOwner.html'));
 
 const getEmailByUserId = function getEmailByUserId(userId) {
   const user = Meteor.users.findOne({ _id: userId });
@@ -11,48 +13,33 @@ const getEmailByUserId = function getEmailByUserId(userId) {
   return email;
 };
 
-const getUserNameByUserId = function getUserNameByUserId(userId) {
-  const user = Meteor.users.findOne({ _id: userId });
-  const username = user.profile
-    ? user.profile.name
-    : user.username;
-  return username;
-};
-
-const sendEmail = function sendEmail(email, receipt) {
-  Email.send({
+const sendGroupOwnerEmail = function sendGroupOwnerEmail(email, emailData) {
+  console.log(emailData);
+  console.log(SSR.render('emailToGroupOwner', emailData));
+  /*Email.send({
     to: email,
     from: 'ivanrouman@gmail.com',
     subject: 'Pizza Ordering',
-    html: receipt,
-  });
+    html: SSR.render('emailToGroupOwner', { emailData }),
+  });*/
 };
 
-const sendEmailCoWorker = function sendEmailCoWorker(user) {
-  const email = getEmailByUserId(user._id);
-  const username = getUserNameByUserId(user._id);
-  const { receipt } = fillReceipt(user.orders, username, this.percents);
-
-  sendEmail(email, receipt);
+const sendCoWorkerEmail = function sendCoWorkerEmail(emailData) {
+  console.log(emailData);
+  console.log(SSR.render('emailToCoWorker', emailData));
+  /*Email.send({
+    to: emailData.email,
+    from: 'ivanrouman@gmail.com',
+    subject: 'Pizza Ordering',
+    html: SSR.render('emailToCoWorker', { emailData }),
+  });*/
 };
 
-exports.sendEmailsToCoWorkers = function sendEmailsToCoWorkers(event, percents) {
-  event.users.forEach(sendEmailCoWorker, { percents });
+exports.sendEmailsToCoWorkers = function sendEmailsToCoWorkers(orders) {
+  orders.forEach(sendCoWorkerEmail);
 };
 
-exports.sendEmailToGroupOwner = function sendEmailToGroupOwner(event, percents, groupOwnerId) {
+exports.sendEmailToGroupOwner = function sendEmailToGroupOwner(orders, totalPrice, groupOwnerId) {
   const email = getEmailByUserId(groupOwnerId);
-  let totalPrice = 0;
-  let totalReceipt = '<h>Hello Group made this is all orders from your group</h1>';
-
-  for (let x = 0; x < event.users.length; x++) {
-    const orders = event.users[x].orders;
-    const username = getUserNameByUserId(event.users[x]._id);
-
-    const { receipt, orderPrice } = fillReceipt(orders, username, percents);
-    totalPrice += orderPrice;
-    totalReceipt += receipt;
-  }
-  totalReceipt += `<table style="background-color: #7ef07a; border-style: solid; border-radius: 10px; margin: 10px; padding:10px"><tr><td><p style="margin:0">Total price: ${totalPrice.toFixed(2)}</p></td></tr></table>`;
-  sendEmail(email, totalReceipt);
+  sendGroupOwnerEmail(email, { orders, totalPrice });
 };

@@ -1,0 +1,31 @@
+<html>
+  <body>
+    <h1> Hello Group made this is all orders from your group </h1>
+    {{#each orders}}
+      <table style="background-color: #A6E0f6;  border-style: solid; 
+          border-radius: 10px; margin: 10px; padding:10px;">
+        <tr>
+          <td>
+            <h> CoWorker {{ username }} order: </h>
+            {{#each order.items}}
+              <p style="margin:0;"> Name: {{ name }} </p>
+              <p style="margin:0;"> Count: {{ count }} </p>
+              <p style="margin:0;"> Price: {{ price }} </p>
+            {{/each}}
+            <p style="margin:0;"> Total price: {{ order.orderPrice }} </p>
+          </td>
+        </tr>
+      </table>
+    {{/each}}
+    <table style="background-color: #7ef07a; border-style: solid; 
+      border-radius: 10px; margin: 10px; padding:10px">
+      <tr>
+        <td>
+          <p style="margin:0">
+            Total orders price: {{ totalPrice }}
+          </p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
