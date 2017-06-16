@@ -27,8 +27,9 @@ Meteor.methods({
     Meteor.users.update({ _id: userId }, { $addToSet: { groups: { _id: groupId } } });
   },
 
-  'user.setActiveGroup'(groupId) {
+  'user.setActiveGroup'(groupId, elemType) {
     check(groupId, String);
+    check(elemType, String);
 
     const userId = Meteor.userId();
 
@@ -36,7 +37,7 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
-    Meteor.users.update({ _id: userId }, { $set: { activeGroup: groupId } });
+    Meteor.users.update({ _id: userId }, { $set: { activeGroup: groupId, elemType } });
   },
 
   'user.setActiveEvent'(eventId) {

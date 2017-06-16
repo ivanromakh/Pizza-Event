@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 import { Events } from './events';
+import { Groups } from '../groups/groups';
 
 
 Meteor.methods({
@@ -12,10 +13,17 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
+    let group = Groups.findOne({ _id: groupId });
+    console.log('group: ', group, groupId);
+    if (!group) {
+      throw new Meteor.Error('group-not-found');
+    }
+
     Events.insert({
       groupId,
       date: timestamp,
       status: 'ordering',
+      users: group.users
     });
   },
 

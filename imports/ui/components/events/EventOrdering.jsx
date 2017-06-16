@@ -48,6 +48,7 @@ class EventOrdering extends Component {
   ConfirmOrder() {
     var eventId = this.props.event._id;
     Meteor.call('events.confirmOrder', eventId);
+    this.props.checkOrdering(eventId);
   }
 
   render() {

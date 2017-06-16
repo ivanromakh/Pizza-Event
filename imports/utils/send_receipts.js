@@ -1,17 +1,10 @@
-import { Meteor } from 'meteor/meteor';
 import { Email } from 'meteor/email';
 import { SSR } from 'meteor/meteorhacks:ssr';
 
+import { getUserEmail } from './users.js'
+
 SSR.compileTemplate('emailToCoWorker', Assets.getText('emailToCoWorker.html'));
 SSR.compileTemplate('emailToGroupOwner', Assets.getText('emailToGroupOwner.html'));
-
-const getEmailByUserId = function getEmailByUserId(userId) {
-  const user = Meteor.users.findOne({ _id: userId });
-  const email = user.profile
-    ? user.services.google.email
-    : user.emails[0].address;
-  return email;
-};
 
 const sendGroupOwnerEmail = function sendGroupOwnerEmail(email, emailData) {
   console.log(emailData);
@@ -40,6 +33,6 @@ exports.sendEmailsToCoWorkers = function sendEmailsToCoWorkers(orders) {
 };
 
 exports.sendEmailToGroupOwner = function sendEmailToGroupOwner(orders, totalPrice, groupOwnerId) {
-  const email = getEmailByUserId(groupOwnerId);
+  const email = getUserEmail(groupOwnerId);
   sendGroupOwnerEmail(email, { orders, totalPrice });
 };

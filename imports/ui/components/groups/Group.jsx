@@ -19,6 +19,7 @@ export default class Group extends Component {
     this.onInviteForm = this.onInviteForm.bind(this);
     this.onAccepted = this.onAccepted.bind(this);
     this.openMenuItems = this.openMenuItems.bind(this);
+    this.openEvents = this.openEvents.bind(this);
   }
 
   renderUser(user) {
@@ -31,7 +32,11 @@ export default class Group extends Component {
   }
 
   openMenuItems() {
-    Meteor.call('user.setActiveGroup', this.props.group._id);
+    Meteor.call('user.setActiveGroup', this.props.group._id, 'menuItems');
+  }
+
+  openEvents() {
+    Meteor.call('user.setActiveGroup', this.props.group._id, 'events');
   }
 
   // User accept group
@@ -77,10 +82,15 @@ export default class Group extends Component {
             </button>
             {
               !this.props.referedGroup ? (
-                <button 
-                  className="btn btn-primary btn-xs pull-right"
-                  onClick={ this.openMenuItems }> 
+                <button className="btn btn-primary btn-xs pull-right" onClick={ this.openMenuItems }> 
                   MenuItems 
+                </button>
+              ) : null
+            }
+            {
+              !this.props.referedGroup ? (
+                <button className="btn btn-primary btn-xs pull-right" onClick={ this.openEvents }> 
+                  events 
                 </button>
               ) : null
             }

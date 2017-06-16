@@ -4,7 +4,7 @@ import { Groups } from '../api/groups/groups';
 import { Events } from '../api/events/events';
 
 import { sendEmailsToCoWorkers, sendEmailToGroupOwner } from './send_receipts.js';
-
+import { getUserName, getUserEmail } from './users.js'
 
 const findItemsWithDiscount = function findItemsWithDiscount(disc, item) {
   if (item.coupons > 0) {
@@ -23,22 +23,6 @@ const uniteOrders = function uniteOrders(orders, user) {
 
 const getEventOrders = function getEventOrders(event) {
   return event.users.reduce(uniteOrders, []);
-};
-
-const getEmailByUserId = function getEmailByUserId(userId) {
-  const user = Meteor.users.findOne({ _id: userId });
-  const email = user.profile
-    ? user.services.google.email
-    : user.emails[0].address;
-  return email;
-};
-
-const getUserNameByUserId = function getUserNameByUserId(userId) {
-  const user = Meteor.users.findOne({ _id: userId });
-  const username = user.profile
-    ? user.profile.name
-    : user.username;
-  return username;
 };
 
 const itemsCountWithDiscount = function itemsCountWithDiscount(items, discounts) {
@@ -94,8 +78,8 @@ const calcPrice = function calcPrice(itemsData, username, allPercents) {
 const getOrdersData = function getOrdersData(event, percents) {
   let totalPrice = 0;
   const orders = event.users.reduce((result, user) => {
-    const email = getEmailByUserId(user._id);
-    const username = getUserNameByUserId(user._id);
+    const email = getUserEmail(user._id);
+    const username = getUserName(user._id);
     const order = calcPrice(user.orders, username, percents);
     totalPrice += order.orderPrice;
     result.push({ order, email, username, userId: user._id });
@@ -104,7 +88,9 @@ const getOrdersData = function getOrdersData(event, percents) {
   return { orders, totalPrice };
 };
 
-const makeReceipts = function makeReceipts(event, group) {
+const MakeAndSendEmails = function MakeAndSendEmails(event) {
+  const group = Groups.findOne({ _id: event.groupId });
+
   const discounts = getItemsWithDiscount(group);
   const items = getEventOrders(event);
   const countedItems = itemsCountWithDiscount(items, discounts);
@@ -115,48 +101,22 @@ const makeReceipts = function makeReceipts(event, group) {
   sendEmailToGroupOwner(orders, totalPrice, group.owner);
 
   changeEventStatus(event._id);
-};
+}
 
 // check if all users make orders
-Meteor.setInterval(() => {
-  const events = Events.find().fetch();
-  if (events) {
-    events.forEach((event) => {
-      const group = Groups.findOne({ _id: event.groupId });
+Meteor.methods({
+  isAllMakeOrders(eventId) {
+    const event = Events.findOne({ _id: eventId });
 
-      if (event.status === 'ordering') {
-        if (group && event.users) {
-          const usersId = group.users.map((user) => user._id);
+    let isOrdered = false;
 
-          const eventUsersId = event.users.map((user) => {
-            if (!user.confirm) {
-              return null;
-            }
-            return user._id;
-          });
-
-          // check if all users in group make order
-          const isNotOrdered = usersId.find((userId) => {
-            const isOrdered = eventUsersId.find((eventUserId) => {
-              if (eventUserId === userId) {
-                return true;
-              }
-              return false;
-            });
-
-            if (!isOrdered) {
-              return true;
-            }
-            return false;
-          });
-
-          const ordered = !isNotOrdered;
-
-          if (ordered) {
-            makeReceipts(event, group);
-          }
-        }
-      }
-    });
+    if (event && event.status === 'ordering' && event.users) {
+      let notOrderedUser = event.users.find((user) => !user.confirm );
+      isOrdered = notOrderedUser ? false : true;
+    }
+    if(isOrdered) {
+      MakeAndSendEmails(event);
+    }
+    return isOrdered;
   }
-}, 10000);
+});

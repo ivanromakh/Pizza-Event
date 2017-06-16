@@ -77,19 +77,23 @@ export default class PizzaEvents extends Component {
   }
 
   render() {
+    console.log(this.props.checkOrdering);
     if(this.props.group && this.props.group._id) {
       return (
         <div className="events-column">
-          {this.renderEventCreateForm()}
+          { this.renderEventCreateForm() }
           <div className="events-table">
             <div className="events-row">
               <div className="events-head"> Name </div>
               <div className="events-head"> Price </div>
               <div className="events-head"> Actions </div>
             </div>
-            {this.renderGroupEvents()}
+            { this.renderGroupEvents() }
           </div>
-          <EventOrdering group={ this.props.group } />
+          <EventOrdering 
+            group={ this.props.group }
+            checkOrdering={ this.props.checkOrdering.bind(this) }
+          />
         </div>
       );
     } else {
