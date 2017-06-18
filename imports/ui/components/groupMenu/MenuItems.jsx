@@ -30,7 +30,6 @@ export default class MenuItems extends Component {
   addNewItem(event) {
     event.preventDefault();
     var name = this.state.itemName;
-    console.log('price: ', this.state.itemPrice);
     var price = parseInt(this.state.itemPrice);
  
     Meteor.call('groups.addMenuItem', this.props.group._id, name, price);

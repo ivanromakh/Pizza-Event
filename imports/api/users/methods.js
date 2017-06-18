@@ -23,8 +23,10 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
-    Meteor.users.update({ _id: userId }, { $pull: { invitations: { _id: groupId } } });
-    Meteor.users.update({ _id: userId }, { $addToSet: { groups: { _id: groupId } } });
+    Meteor.users.update({ _id: userId }, {
+      $pull: { invitations: { _id: groupId } }, 
+      $addToSet: { groups: { _id: groupId } },
+    });
   },
 
   'user.setActiveGroup'(groupId, elemType) {
@@ -51,4 +53,14 @@ Meteor.methods({
 
     Meteor.users.update({ _id: userId }, { $set: { activeEvent: eventId } });
   },
+
+  'user.unsetActiveEvent'() {
+    const userId = Meteor.userId();
+
+    if (!userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    Meteor.users.update({ _id: userId }, { $set: { activeEvent: null } });
+  }
 });

@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 export default class CreateGroupForm extends Component {
   constructor(props) {
     super(props);
-    this.state = {showForm: false, groupName: '', file: '', imagePreviewUrl: ''};
+    this.state = { showForm: false, groupName: '', file: '', imagePreviewUrl: '' };
 
     this.handleChange = this.handleChange.bind(this);
     this.createGroup = this.createGroup.bind(this);
@@ -14,7 +14,7 @@ export default class CreateGroupForm extends Component {
   }
 
   handleChange(event) {
-    this.setState({groupName: event.target.value});
+    this.setState({ groupName: event.target.value });
   }
 
   toggleForm() {
@@ -23,7 +23,7 @@ export default class CreateGroupForm extends Component {
 
   createGroup(event) {
     event.preventDefault();
-    var name = this.state.groupName;
+    const name = this.state.groupName;
 
     if (Meteor.userId()) {
       Meteor.call('groups.create', name, this.state.imagePreviewUrl);
@@ -35,13 +35,13 @@ export default class CreateGroupForm extends Component {
   handleImageChange(event) {
     event.preventDefault();
 
-    let reader = new FileReader();
-    let file = event.target.files[0];
-    
+    const reader = new FileReader();
+    const file = event.target.files[0];
+
     reader.onloadend = () => {
       this.setState({
-        file: file,
-        imagePreviewUrl: reader.result
+        file,
+        imagePreviewUrl: reader.result,
       });
     };
 
@@ -49,41 +49,61 @@ export default class CreateGroupForm extends Component {
   }
 
   render() {
-    if(Meteor.userId()) {
-      if(this.state.showForm) {
-        let imagePreviewUrl = this.state.imagePreviewUrl;
+    if (Meteor.userId()) {
+      if (this.state.showForm) {
+        const imagePreviewUrl = this.state.imagePreviewUrl;
         let $imagePreview = null;
- 
+
         if (imagePreviewUrl) {
-          $imagePreview = (<img className="preview-group-logo" src={ imagePreviewUrl } />);
+          $imagePreview = (<img className="preview-group-logo" src={imagePreviewUrl} />);
         } else {
-          $imagePreview = (<div className="preview-group-logo">Please select an Image for Preview</div>);
+          $imagePreview = (<img className="preview-group-logo" src="/profile-group.png" />);
         }
- 
+
         return (
-          <div className="create-group-form">
-            <form onSubmit={ this.createGroup }>
+          <div className="thumbnail clearfix create-group-form">
+            <form className="form-horizontal" onSubmit={this.createGroup}>
               <h4> Create group </h4>
-              <input type="file" onChange={ this.handleImageChange } />
-              { $imagePreview }
-              <label>
-                Name:
-                <input type="text" value={ this.state.groupName } onChange={ this.handleChange } />
-              </label>
-              <input type="submit" value="Create" />
+              <div className="form-group">
+                <label className="control-label col-sm-3" htmlFor="email">Name:</label>
+                <div className="col-sm-7">
+                  <input
+                    className="form-control"
+                    type="text"
+                    value={this.state.groupName}
+                    onChange={this.handleChange}
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="control-label col-sm-3" htmlFor="email">Group logo:</label>
+                <div className="col-sm-7">
+                  { $imagePreview }
+                  <input
+                    className="form-control"
+                    type="file"
+                    onChange={this.handleImageChange}
+                  />
+                </div>
+              </div>
+              <button className="btn btn-primary btn-xs pull-right" onClick={this.toggleForm}>
+                Cancel
+              </button>
+              <button className="btn btn-primary btn-xs pull-right" type="submit">
+                Create
+              </button>
             </form>
-            <button className="btn btn-primary btn-xs" onClick={ this.toggleForm } value> Hide creation group </button>;
-          </div>
-        );
-      } else {
-        return (
-          <div className="create-group-form"> 
-            <button className="btn btn-primary btn-xs" onClick={ this.toggleForm } value> Show creation group </button>
           </div>
         );
       }
-    } else {
-      return <p> Pleasure sign in if you want to see groups </p>;
+      return (
+        <div className="create-group-form">
+          <button className="btn btn-primary btn-xs" onClick={this.toggleForm} value>
+              Show creation group
+            </button>
+        </div>
+      );
     }
+    return <p> Pleasure sign in if you want to see groups </p>;
   }
 }

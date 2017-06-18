@@ -4,35 +4,41 @@ import PropTypes from 'prop-types';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Tracker } from 'meteor/tracker';
 
-import {Images} from '../../../api/images/images';
+import { Images } from '../../../api/images/images';
 import { Groups } from '../../../api/groups/groups';
 import Group from './Group';
 import ReferredGroups from './ReferredGroups';
 
 
 class ShowClientGroups extends Component {
+  componentWillUnmount() {
+    this.props.user.stop();
+    this.props.ownerGroups.stop();
+    this.props.groupsData.stop();
+  }
+
   renderClientGroups() {
-    var groups = this.props.groupsData;
+    const groups = this.props.groupsData;
 
     return groups.map((group) => (
-      <Group 
-        key={ group._id } 
-        group={ group } 
-        user={ this.props.user } 
-        owner={ false } 
+      <Group
+        key={group._id}
+        group={group}
+        user={this.props.user}
+        owner={false}
       />
     ));
   }
 
   renderOwnerGroups() {
     return this.props.ownerGroups.map((group) => (
-      <Group 
-        key={ group._id } 
-        group={ group } 
-        user={ this.props.user } 
-        owner={ true } 
+      <Group
+        key={group._id}
+        group={group}
+        user={this.props.user}
+        owner
       />
-    )); 
+    ));
   }
 
   render() {
@@ -60,43 +66,39 @@ ShowClientGroups.propTypes = {
 };
 
 export default createContainer(() => {
-  Tracker.autorun(() => {
-    Meteor.subscribe('groups');
-    Meteor.subscribe('users');
-    Meteor.subscribe('images');
-  });
+  const handle = Meteor.subscribe('groups');
+  Meteor.subscribe('users');
+  Meteor.subscribe('images');
 
-  var groupsData = [];
-  var ownerGroups = Groups.find({ owner: Meteor.userId() }).fetch();
+  let groupsData = [];
+  const ownerGroups = Groups.find({ owner: Meteor.userId() }).fetch();
 
-  if(!ownerGroups){
-    ownerGroups = [];
-  }
-
-  if(Meteor.user()){
-    if(Meteor.user().groups && Meteor.user().groups != []){
-      groupsData = Groups.find({ $or : Meteor.user().groups }).fetch();
+  if (Meteor.user()) {
+    if (Meteor.user().groups && Meteor.user().groups != []) {
+      groupsData = Groups.find({ $or: Meteor.user().groups }).fetch();
     }
   }
 
-  groupsData.map(function(group) {
-    var image = Images.findOne({ groupId: group._id });
-    if(image) {
+  groupsData.map((group) => {
+    const image = Images.findOne({ groupId: group._id });
+    if (image) {
       group.logo = image.url();
     }
-  }, { Images: Images });
-  
-  ownerGroups.map(function(group) {
-    var image = Images.findOne({ groupId: group._id });
-    
-    if(image){
+  }, { Images });
+
+  ownerGroups.map((group) => {
+    const image = Images.findOne({ groupId: group._id });
+
+    if (image) {
       group.logo = image.url();
     }
-  }, { Images: Images });
+  }, { Images });
+
+  console.log(groupsData, ownerGroups);
 
   return {
     user: Meteor.users.findOne({ _id: Meteor.userId() }) || { groups: [] },
-    ownerGroups: ownerGroups,
-    groupsData: groupsData,
+    ownerGroups: ownerGroups || [],
+    groupsData,
   };
 }, ShowClientGroups);

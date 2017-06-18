@@ -17,6 +17,10 @@ export default class AccountUiWrapper extends Component {
 
   render() {
     // Just render a placeholder container that will be filled in
-    return <span ref="container" className="login" />;
+    return (
+      <button className="">
+        <span ref="container" className="login" />
+      </button>
+    );
   }
 }

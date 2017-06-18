@@ -12,7 +12,7 @@ class InviteForm extends Component {
 
     this.state = {
       selectedUser: '',
-      disabled: false
+      disabled: false,
     };
 
     this.sendInvitation = this.sendInvitation.bind(this);
@@ -21,7 +21,7 @@ class InviteForm extends Component {
 
   handleSelectChange(newValue) {
     this.setState({
-      selectedUser: newValue
+      selectedUser: newValue,
     });
   }
 
@@ -32,27 +32,31 @@ class InviteForm extends Component {
   }
 
   render() {
-    var options = this.props.users.map(function(user) {
-      var option = {};
+    let options = this.props.users.map((user) => {
+      const option = {};
       option.value = user._id;
       option.label = user.profile ? user.profile.name : user.username;
       return option;
     });
 
-    if(!options) {
+    if (!options) {
       options = [];
     }
 
     return (
-      <div>
-        <form onSubmit={ this.sendInvitation }>
-          <Select autofocus options={ options }
+      <div className="thumbnail">
+        <p className="text-center"> Users invitation </p>
+        <form onSubmit={this.sendInvitation}>
+          <Select
+            autofocus
+            options={options}
             name="selected-order"
-            disabled={ this.state.disabled }
-            value={ this.state.selectedUser } onChange={ this.handleSelectChange } 
-            searchable={ this.state.searchable }
+            disabled={this.state.disabled}
+            value={this.state.selectedUser}
+            onChange={this.handleSelectChange}
+            searchable={this.state.searchable}
           />
-          <button type="submit" className>Invite</button>
+          <button type="submit" className="btn btn-primary btn-xs pull-center">Invite</button>
         </form>
       </div>
     );
@@ -66,7 +70,7 @@ InviteForm.propTypes = {
 
 export default createContainer(() => {
   Meteor.subscribe('users');
-  
+
   return {
     users: Meteor.users.find({ _id: { $ne: Meteor.userId() } }).fetch(),
   };

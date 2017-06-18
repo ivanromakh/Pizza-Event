@@ -22,8 +22,7 @@ Meteor.methods({
     const id = Groups.insert({
       name,
       owner: userId,
-      username: Meteor.user().username,
-      users: [{ _id: userId, username }],
+      users: [{ _id: userId, username: username }],
     });
 
     const groupLogo = new FS.File();

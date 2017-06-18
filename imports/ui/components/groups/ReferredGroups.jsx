@@ -8,17 +8,20 @@ import { Groups } from '../../../api/groups/groups';
 import Group from './Group.jsx';
 
 class ReferredGroups extends Component {
-  
+  componentWillUnmount() {
+
+  }
+
   renderGroups() {
-    var groups = this.props.groups;
-    if(groups) {
+    const groups = this.props.groups;
+    if (groups) {
       return groups.map((group) => (
-        <Group 
-          key={ group._id } 
-          group={ group } 
-          user={ this.props.user } 
-          owner={ false } 
-          referedGroup={ true }
+        <Group
+          key={group._id}
+          group={group}
+          user={this.props.user}
+          owner={false}
+          referedGroup
         />
       ));
     }
@@ -28,7 +31,7 @@ class ReferredGroups extends Component {
   render() {
     return (
       <div>
-        {this.renderGroups()}
+        { this.renderGroups() }
       </div>
     );
   }
@@ -41,22 +44,18 @@ ReferredGroups.propTypes = {
 
 export default createContainer(() => {
   Meteor.subscribe('users');
+  Meteor.subscribe('groups');
 
-  var user = Meteor.users.findOne({ _id: Meteor.userId() });
-  var groups = [];
+  const user = Meteor.users.findOne({ _id: Meteor.userId() });
+  let groups = [];
 
-  // sometimes user is underfined
-  if(!user) {
-    user = {};
-  }
-
-  if(user.invitations) {
-    var userInvitations = user.invitations.map((group)=> group._id);
-    groups = Groups.find({ _id: {$in: userInvitations}}).fetch();
+  if (user && user.invitations) {
+    const userInvitations = user.invitations.map((group) => group._id);
+    groups = Groups.find({ _id: { $in: userInvitations } }).fetch();
   }
 
   return {
-    user: user,
-    groups: groups,
+    user: user || {},
+    groups,
   };
 }, ReferredGroups);

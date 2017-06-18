@@ -6,7 +6,7 @@ import InviteForm from './InviteForm';
 
 
 // Group component for each of client groups
-export default class Group extends Component {  
+export default class Group extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,21 +22,18 @@ export default class Group extends Component {
     this.openEvents = this.openEvents.bind(this);
   }
 
-  renderUser(user) {
-    return (<p key={ user._id }> { user.username } </p>);
-  }
-
-  // Group owner open invite form
   onInviteForm() {
     this.setState({ showInviteForm: !this.state.showInviteForm });
   }
 
   openMenuItems() {
     Meteor.call('user.setActiveGroup', this.props.group._id, 'menuItems');
+    Meteor.call('user.unsetActiveEvent');
   }
 
   openEvents() {
     Meteor.call('user.setActiveGroup', this.props.group._id, 'events');
+    Meteor.call('user.unsetActiveEvent');
   }
 
   // User accept group
@@ -45,60 +42,113 @@ export default class Group extends Component {
     Meteor.call('user.acceptedGroup', this.props.group._id, this.props.user);
   }
 
-  // Show users of this group
   onClick() {
     this.setState({ showUsers: !this.state.showUsers });
   }
 
-  render() {
-    var group = this.props.group;
-    var logo = group.logo ? group.logo : 'profile-group.png';
+  renderInviteForm(group) {
+    if (this.state.showInviteForm) {
+      return (
+        <InviteForm key={group._id} groupId={group._id} />
+      );
+    }
+    return null;
+  }
+
+  renderAcceptButton() {
+    if (this.props.referedGroup) {
+      return (
+        <button className="btn btn-primary btn-xs btn-block" onClick={this.onAccepted}>
+          Accept
+        </button>
+      );
+    }
+    return null;
+  }
+
+  renderInviteButton() {
+    if (this.props.owner) {
+      return (
+        <button className="btn btn-primary btn-xs btn-block" onClick={this.onInviteForm}>
+          Invite user
+        </button>
+      );
+    }
+    return null;
+  }
+
+  renderUsersButton() {
     return (
-      <div className='thumbnail'>
+      <button
+        className="btn btn-primary btn-xs btn-block"
+        onClick={this.onClick}
+      >
+          Show users
+      </button>
+    );
+  }
+
+  renderMenuItemsButton() {
+    if (!this.props.referedGroup) {
+      return (
+        <button className="btn btn-primary btn-xs btn-block" onClick={this.openMenuItems}>
+          MenuItems
+        </button>
+      );
+    }
+    return null;
+  }
+
+  renderEventsButton() {
+    if (!this.props.referedGroup) {
+      return (
+        <button className="btn btn-primary btn-xs btn-block" onClick={this.openEvents}>
+          events
+        </button>
+      );
+    }
+    return null;
+  }
+
+  renderUser(user) {
+    return (<li className="list-group-item" key={user._id}> { user.username } </li>);
+  }
+
+  renderUsersList(group) {
+    if (this.state.showUsers) {
+      return (
         <div>
-          { 
-            this.state.showInviteForm 
-              ? <InviteForm 
-                  key={ group._id }
-                  groupId={ group._id }
-                /> 
-              : null 
-          }
-          <p>
-            <img src={ logo } height="42" width="42" />
-            { this.props.group.name }
-            {
-              this.props.referedGroup ? (<button className="btn btn-primary btn-xs pull-right"
-                onClick={ this.onAccepted }> Accept</button>) : null
-            }
-            {
-              this.props.owner ? (<button className="btn btn-primary btn-xs pull-right"
-                onClick={ this.onInviteForm }> Invite user </button>) : null
-            }
-            <button 
-              className="btn btn-primary btn-xs pull-right"
-              onClick={ this.onClick }> 
-              Show users 
-            </button>
-            {
-              !this.props.referedGroup ? (
-                <button className="btn btn-primary btn-xs pull-right" onClick={ this.openMenuItems }> 
-                  MenuItems 
-                </button>
-              ) : null
-            }
-            {
-              !this.props.referedGroup ? (
-                <button className="btn btn-primary btn-xs pull-right" onClick={ this.openEvents }> 
-                  events 
-                </button>
-              ) : null
-            }
-          </p>
           <p>Users list</p>
-          { 
-            this.state.showUsers ? group.users.map((user)=>this.renderUser(user)) : null 
-          }
+          <ul className="list-group">
+            { group.users.map((user) => this.renderUser(user)) }
+          </ul>
+        </div>
+      );
+    }
+    return null;
+  }
+
+  render() {
+    const group = this.props.group;
+    const logo = group.logo ? group.logo : 'profile-group.png';
+    return (
+      <div className="thumbnail">
+        <div>
+          { this.renderInviteForm(group) }
+          <div className="row">
+            <div className="col-md-7">
+              <img src={logo} height="42" width="42" />
+              { group.name }
+            </div>
+            <div className="col-md-4">
+              { this.renderAcceptButton() }
+              { this.renderInviteButton() }
+              { this.renderUsersButton() }
+              { this.renderMenuItemsButton() }
+              { this.renderEventsButton() }
+            </div>
+          </div>
+          { this.renderUsersList(group) }
         </div>
       </div>
     );

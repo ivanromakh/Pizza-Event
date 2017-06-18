@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "start": "meteor run",
-    "lint": "eslint ."
+    "lint": "node_modules/.bin/eslint ."
   },
   "dependencies": {
     "babel-runtime": "^6.20.0",
@@ -47,8 +47,8 @@
       "meteor"
     ],
     "globals": {
-        "Assets": true,
-        "document": true
+      "Assets": true,
+      "document": true
     },
     "extends": [
       "airbnb",
