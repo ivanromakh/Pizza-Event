@@ -2,25 +2,27 @@ import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { createContainer } from 'meteor/react-meteor-data';
-import { Tracker } from 'meteor/tracker';
 
-import { Images } from '../../../api/images/images';
 import { Groups } from '../../../api/groups/groups';
+import { Images } from '../../../api/images/images';
 import Group from './Group';
 import ReferredGroups from './ReferredGroups';
 
 
 class ShowClientGroups extends Component {
   componentWillUnmount() {
-    this.props.user.stop();
-    this.props.ownerGroups.stop();
-    this.props.groupsData.stop();
+    this.props.userGroups.stop();
   }
 
-  renderClientGroups() {
-    const groups = this.props.groupsData;
+  renderLocalGroups() {
+    const groups = this.props.userGroups;
+    const userId = Meteor.userId();
 
-    return groups.map((group) => (
+    const localGroups = groups.filter((group) => {
+      return group.owner !== userId;      
+    });
+    
+    return localGroups.map((group) => (
       <Group
         key={group._id}
         group={group}
@@ -31,7 +33,14 @@ class ShowClientGroups extends Component {
   }
 
   renderOwnerGroups() {
-    return this.props.ownerGroups.map((group) => (
+    const groups = this.props.userGroups;
+    const userId = Meteor.userId();
+
+    const ownerGroups = groups.filter((group) => {
+      return group.owner === userId;
+    });
+
+    return ownerGroups.map((group) => (
       <Group
         key={group._id}
         group={group}
@@ -50,55 +59,52 @@ class ShowClientGroups extends Component {
         </ul>
         <p> Local Groups </p>
         <ul>
-          { this.renderClientGroups() }
+          { this.renderLocalGroups() }
         </ul>
         <p> Groups which invited you </p>
-        <ReferredGroups />
+        <ReferredGroups
+          referredGroups={this.props.referredGroups}
+          user={this.props.user}
+        />
       </div>
     );
   }
 }
 
+ShowClientGroups.defaultProps  = {
+  user: { groups: [] },
+  userGroups: [],
+};
+
 ShowClientGroups.propTypes = {
-  groupsData: PropTypes.array.isRequired,
-  ownerGroups: PropTypes.array.isRequired,
   user: PropTypes.object.isRequired,
+  userGroups: PropTypes.array.isRequired,
 };
 
 export default createContainer(() => {
-  const handle = Meteor.subscribe('groups');
-  Meteor.subscribe('users');
+  Meteor.subscribe('userGroups');
   Meteor.subscribe('images');
 
-  let groupsData = [];
-  const ownerGroups = Groups.find({ owner: Meteor.userId() }).fetch();
+  let user = Meteor.user();
 
-  if (Meteor.user()) {
-    if (Meteor.user().groups && Meteor.user().groups != []) {
-      groupsData = Groups.find({ $or: Meteor.user().groups }).fetch();
-    }
+  if (!user) {
+    return {};
   }
 
-  groupsData.map((group) => {
-    const image = Images.findOne({ groupId: group._id });
-    if (image) {
-      group.logo = image.url();
-    }
-  }, { Images });
-
-  ownerGroups.map((group) => {
-    const image = Images.findOne({ groupId: group._id });
-
-    if (image) {
-      group.logo = image.url();
-    }
-  }, { Images });
-
-  console.log(groupsData, ownerGroups);
+  let { _id: userId, groups: userGroups = [NaN] } = user;
 
   return {
-    user: Meteor.users.findOne({ _id: Meteor.userId() }) || { groups: [] },
-    ownerGroups: ownerGroups || [],
-    groupsData,
+    user: user,
+    referredGroups: Groups.find({ invitations: { $elemMatch: { _id: userId } } }).fetch(),
+    userGroups: Groups.find({ $or: userGroups })
+      .fetch()
+      .map((group) => {
+        let image = Images.findOne({ groupId: group._id });
+        if (image) {
+          group.logo = image.url();
+        }
+        return group;
+      }
+    ),
   };
 }, ShowClientGroups);

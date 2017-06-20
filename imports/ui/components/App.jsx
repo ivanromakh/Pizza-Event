@@ -14,6 +14,12 @@ import { Events } from '../../api/events/events';
 
 
 class App extends Component {
+  componentWillUnmount() {
+    this.props.user.stop();
+    this.props.events.stop();
+    this.props.activeElement.stop();
+  }
+
   // this function calling in EventOrdering.jsx
   checkOrdering(eventId) {
     Meteor.call('isAllMakeOrders', eventId);
@@ -21,17 +27,21 @@ class App extends Component {
 
   renderColumnContent() {
     if (this.props.activeElement === 'events') {
-      return (<PizzaEvents
-        checkOrdering={this.checkOrdering.bind(this)}
-        group={this.props.group}
-        events={this.props.events}
-      />);
+      return (
+        <PizzaEvents
+          checkOrdering={this.checkOrdering}
+          group={this.props.group}
+          events={this.props.events}
+        />
+      );
     }
 
     if (this.props.activeElement === 'menuItems') {
       return <MenuItems group={this.props.group} />;
     }
-    return null;
+    return (
+      <p> Pleasure select group by clicking <b>events</b> or <b>menuItems</b> buttons </p>
+    );
   }
 
   render() {
@@ -40,7 +50,7 @@ class App extends Component {
         <div className="page--row">
           <div className="col-md-7 page--column">
             <h1 className="page--header"> Pizza Ordering </h1>
-            { this.renderColumnContent() }
+            {this.renderColumnContent()}
           </div>
           <div className="col-md-4 page--column">
             <AccountUiWrapper />
@@ -53,10 +63,16 @@ class App extends Component {
   }
 }
 
+App.defaultProps  = {
+  group: {},
+  events: [],
+  activeElement: '',
+};
+
 App.propTypes = {
   group: PropTypes.object.isRequired,
   events: PropTypes.array.isRequired,
-  activeElement: PropTypes.string.isRequired,
+  activeElement: PropTypes.string,
 };
 
 export default createContainer(() => {
@@ -74,9 +90,5 @@ export default createContainer(() => {
     activeElement = Meteor.user().elemType;
   }
 
-  return {
-    group,
-    events,
-    activeElement,
-  };
+  return { group, events, activeElement };
 }, App);

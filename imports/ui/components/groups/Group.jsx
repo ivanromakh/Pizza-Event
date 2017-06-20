@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import AcceptButton from '../groupButtons/acceptedButton';
 import InviteForm from './InviteForm';
 
 
@@ -17,7 +18,6 @@ export default class Group extends Component {
 
     this.onClick = this.onClick.bind(this);
     this.onInviteForm = this.onInviteForm.bind(this);
-    this.onAccepted = this.onAccepted.bind(this);
     this.openMenuItems = this.openMenuItems.bind(this);
     this.openEvents = this.openEvents.bind(this);
   }
@@ -36,12 +36,6 @@ export default class Group extends Component {
     Meteor.call('user.unsetActiveEvent');
   }
 
-  // User accept group
-  onAccepted() {
-    Meteor.call('groups.acceptUser', this.props.group._id, this.props.user);
-    Meteor.call('user.acceptedGroup', this.props.group._id, this.props.user);
-  }
-
   onClick() {
     this.setState({ showUsers: !this.state.showUsers });
   }
@@ -58,9 +52,7 @@ export default class Group extends Component {
   renderAcceptButton() {
     if (this.props.referedGroup) {
       return (
-        <button className="btn btn-primary btn-xs btn-block" onClick={this.onAccepted}>
-          Accept
-        </button>
+        <AcceptButton groupId = {this.props.group._id} user = {this.props.user} />
       );
     }
     return null;

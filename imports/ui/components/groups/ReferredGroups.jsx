@@ -9,7 +9,7 @@ import Group from './Group.jsx';
 
 class ReferredGroups extends Component {
   componentWillUnmount() {
-
+    this.props.handleGroups.stop();
   }
 
   renderGroups() {
@@ -37,25 +37,13 @@ class ReferredGroups extends Component {
   }
 }
 
+ReferredGroups.defaultProps  = {
+  groups: [],
+};
+
 ReferredGroups.propTypes = {
   user: PropTypes.object.isRequired,
   groups: PropTypes.array.isRequired,
 };
 
-export default createContainer(() => {
-  Meteor.subscribe('users');
-  Meteor.subscribe('groups');
-
-  const user = Meteor.users.findOne({ _id: Meteor.userId() });
-  let groups = [];
-
-  if (user && user.invitations) {
-    const userInvitations = user.invitations.map((group) => group._id);
-    groups = Groups.find({ _id: { $in: userInvitations } }).fetch();
-  }
-
-  return {
-    user: user || {},
-    groups,
-  };
-}, ReferredGroups);
+export default ReferredGroups;
