@@ -13,7 +13,7 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
-    let group = Groups.findOne({ _id: groupId });
+    const group = Groups.findOne({ _id: groupId });
     console.log('group: ', group, groupId);
     if (!group) {
       throw new Meteor.Error('group-not-found');
@@ -23,7 +23,7 @@ Meteor.methods({
       groupId,
       date: timestamp,
       status: 'ordering',
-      users: group.users
+      users: group.users,
     });
   },
 

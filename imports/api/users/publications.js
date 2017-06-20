@@ -15,7 +15,7 @@ Meteor.publish('users', function pollsCurrentUser() {
       groups: 1,
       activeGroup: 1,
       activeEvent: 1,
-      elemType: 1
+      elemType: 1,
     },
   });
 });

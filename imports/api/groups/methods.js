@@ -17,21 +17,26 @@ Meteor.methods({
     if (!userId) {
       throw new Meteor.Error('not-authorized');
     }
+
     const username = (user.profile) ? user.profile.name : user.username;
 
-    const id = Groups.insert({
+    const groupId = Groups.insert({
       name,
       owner: userId,
-      users: [{ _id: userId, username: username }],
+      users: [{ _id: userId, username }],
+    });
+
+    Meteor.users.update({ _id: userId }, {
+      $addToSet: { groups: { _id: groupId } },
     });
 
     const groupLogo = new FS.File();
-    groupLogo.groupId = id;
+    groupLogo.groupId = groupId;
     if (url) {
-      groupLogo.attachData(url, function insertLogo(error) {
+      groupLogo.attachData(url, (error) => {
         if (error) throw new Meteor.Error('not-save-group-logo');
-        groupLogo.name('newImage.png');
-        Images.insert(groupLogo);
+        groupLogo.name('groupLogo');
+        const imageId = Images.insert(groupLogo);
       });
     }
   },
@@ -63,13 +68,8 @@ Meteor.methods({
       _id: groupId, 'invitations._id': { $exists: true },
     }, {
       $pull: { invitations: { _id: user._id } },
-    }, false, true);
-
-    Groups.update({
-      _id: groupId,
-    }, {
       $addToSet: { users: { _id: user._id, username } },
-    });
+    }, false, true);
   },
 
   'groups.addMenuItem'(groupId, name, price) {

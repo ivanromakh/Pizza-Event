@@ -24,7 +24,7 @@ Meteor.methods({
     }
 
     Meteor.users.update({ _id: userId }, {
-      $pull: { invitations: { _id: groupId } }, 
+      $pull: { invitations: { _id: groupId } },
       $addToSet: { groups: { _id: groupId } },
     });
   },
@@ -62,5 +62,5 @@ Meteor.methods({
     }
 
     Meteor.users.update({ _id: userId }, { $set: { activeEvent: null } });
-  }
+  },
 });
