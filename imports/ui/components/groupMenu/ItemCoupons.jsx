@@ -3,20 +3,20 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 
-export default class ItemCoupons extends Component {
+class ItemCoupons extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {coupons: this.props.coupons};
+    this.state = { coupons: this.props.coupons };
 
     this.setCoupons = this.setCoupons.bind(this);
     this.handleCouponsChange = this.handleCouponsChange.bind(this);
   }
 
   setCoupons() {
-    var groupId = this.props.groupId;
-    var name = this.props.name;
-    var coupons = this.state.coupons;
+    const groupId = this.props.groupId;
+    const name = this.props.name;
+    const coupons = this.state.coupons;
 
     Meteor.call('groups.setCoupons', groupId, name, coupons);
   }
@@ -26,17 +26,21 @@ export default class ItemCoupons extends Component {
   }
 
   render() {
-    var isGroupOwner = Meteor.userId() == this.props.groupOwner;
-    if(isGroupOwner){
+    const isGroupOwner = Meteor.userId() === this.props.groupOwner;
+    if (isGroupOwner) {
       return (
-        <div className="menu-item-coupon"> 
-          <input type="number" value={this.state.coupons}
-            onChange={ this.handleCouponsChange } />
-          <button 
-            className="btn btn-primary btn-xs" 
-            onClick={ this.setCoupons } > 
-            Set 
-          </button> 
+        <div className="menu-item-coupon">
+          <input
+            type="number"
+            value={this.state.coupons}
+            onChange={this.handleCouponsChange}
+          />
+          <button
+            className="btn btn-primary btn-xs"
+            onClick={this.setCoupons}
+          >
+            Set
+          </button>
         </div>
       );
     }
@@ -48,4 +52,7 @@ ItemCoupons.propTypes = {
   name: PropTypes.string.isRequired,
   groupId: PropTypes.string.isRequired,
   groupOwner: PropTypes.string.isRequired,
+  coupons: PropTypes.number.isRequired,
 };
+
+export default ItemCoupons;
