@@ -15,7 +15,6 @@ class ShowClientGroups extends Component {
 
     subscriptions.handleGroups.stop();
     subscriptions.handleImages.stop();
-    subscriptions.handleUsers.stop();
   }
 
   renderLocalGroups() {
@@ -85,15 +84,13 @@ ShowClientGroups.propTypes = {
 
 export default createContainer(() => {
   const handleGroups = Meteor.subscribe('userGroups');
-  const handleUsers = Meteor.subscribe('users');
   const handleImages = Meteor.subscribe('images');
-
 
   const user = Meteor.user();
   const userId = Meteor.userId();
 
   return {
-    subscriptions: { handleGroups, handleUsers, handleImages },
+    subscriptions: { handleGroups, handleImages },
     user,
     referredGroups: Groups.find({ invitations: { $elemMatch: { _id: userId } } }).fetch(),
     userGroups: Groups.find({ users: { $elemMatch: { _id: userId } } })

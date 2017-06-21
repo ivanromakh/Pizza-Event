@@ -3,11 +3,11 @@ import React, { Component } from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 
-import PizzaEvents from './events/PizzaEvents';
-import MenuItems from './groupMenu/MenuItems';
-import ShowClientGroups from './groups/ShowClientGroups';
-import CreateGroupForm from './groups/CreateGroupForm';
-import AccountUiWrapper from './AccountUiWrapper';
+import PizzaEvents from './events/PizzaEvents.jsx';
+import MenuItems from './groupMenu/MenuItems.jsx';
+import ShowClientGroups from './groups/ShowClientGroups.jsx';
+import CreateGroupForm from './groups/CreateGroupForm.jsx';
+import AccountUiWrapper from './AccountUiWrapper.jsx';
 
 import { Groups } from '../../api/groups/groups';
 import { Events } from '../../api/events/events';
@@ -15,9 +15,11 @@ import { Events } from '../../api/events/events';
 
 class App extends Component {
   componentWillUnmount() {
-    this.props.user.stop();
-    this.props.events.stop();
-    this.props.activeElement.stop();
+    const subsciptions = this.props.subsciptions();
+
+    subsciptions.handleGroup.stop();
+    subsciptions.handleEvents.stop();
+    subsciptions.handleUsers.stop();
   }
 
   // this function calling in EventOrdering.jsx
@@ -63,32 +65,36 @@ class App extends Component {
   }
 }
 
-App.defaultProps  = {
+App.defaultProps = {
+  subsciptions: {},
   group: {},
   events: [],
   activeElement: '',
 };
 
 App.propTypes = {
+  subsciptions: PropTypes.object.isRequired,
   group: PropTypes.object.isRequired,
   events: PropTypes.array.isRequired,
   activeElement: PropTypes.string,
 };
 
 export default createContainer(() => {
-  Meteor.subscribe('groups');
-  Meteor.subscribe('events');
+  const handleUsers = Meteor.subscribe('users');
 
-  let group = {};
-  let events = [];
-  let activeElement = '';
-
-  if (Meteor.user() && Meteor.user().activeGroup) {
-    const activeGroup = Meteor.user().activeGroup;
-    group = Groups.findOne({ _id: activeGroup });
-    events = Events.find({ groupId: activeGroup }).fetch();
-    activeElement = Meteor.user().elemType;
+  if (!Meteor.user()) {
+    return {};
   }
 
-  return { group, events, activeElement };
+  const activeGroup = Meteor.user().activeGroup;
+
+  const handleActiveGroup = Meteor.subscribe('getGroupById', activeGroup);
+  const handleEvents = Meteor.subscribe('events', activeGroup);
+
+  return {
+    subsciptions: { handleUsers, handleActiveGroup, handleEvents },
+    group: Groups.findOne(),
+    events: Events.find().fetch(),
+    activeElement: Meteor.user().elemType,
+  };
 }, App);
