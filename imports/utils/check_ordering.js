@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { check } from 'meteor/check';
 
 import { Groups } from '../api/groups/groups';
 import { Events } from '../api/events/events';
@@ -106,6 +107,8 @@ const MakeAndSendEmails = function MakeAndSendEmails(event) {
 // check if all users make orders
 Meteor.methods({
   isAllMakeOrders(eventId) {
+    check(eventId, String);
+
     const event = Events.findOne({ _id: eventId });
 
     let isOrdered = false;

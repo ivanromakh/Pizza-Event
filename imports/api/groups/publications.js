@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-
+import { check } from 'meteor/check';
 import { Groups } from './groups';
 
 
@@ -18,6 +18,7 @@ Meteor.publish('userGroups', function publishGroups() {
 });
 
 Meteor.publish('getGroupById', function getGroup(groupId) {
+  check(groupId, String);
   const userId = this.userId;
 
   if (!this.userId) {
