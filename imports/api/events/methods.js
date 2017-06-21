@@ -14,7 +14,7 @@ Meteor.methods({
     }
 
     const group = Groups.findOne({ _id: groupId });
-    console.log('group: ', group, groupId);
+
     if (!group) {
       throw new Meteor.Error('group-not-found');
     }

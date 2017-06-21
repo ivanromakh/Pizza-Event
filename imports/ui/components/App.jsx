@@ -10,7 +10,6 @@ import CreateGroupForm from './groups/CreateGroupForm.jsx';
 import AccountUiWrapper from './AccountUiWrapper.jsx';
 
 import { Groups } from '../../api/groups/groups';
-import { Events } from '../../api/events/events';
 
 
 class App extends Component {
@@ -18,7 +17,6 @@ class App extends Component {
     const subsciptions = this.props.subsciptions();
 
     subsciptions.handleGroup.stop();
-    subsciptions.handleEvents.stop();
     subsciptions.handleUsers.stop();
   }
 
@@ -33,7 +31,6 @@ class App extends Component {
         <PizzaEvents
           checkOrdering={this.checkOrdering}
           group={this.props.group}
-          events={this.props.events}
         />
       );
     }
@@ -68,14 +65,12 @@ class App extends Component {
 App.defaultProps = {
   subsciptions: {},
   group: {},
-  events: [],
   activeElement: '',
 };
 
 App.propTypes = {
   subsciptions: PropTypes.object.isRequired,
   group: PropTypes.object.isRequired,
-  events: PropTypes.array.isRequired,
   activeElement: PropTypes.string,
 };
 
@@ -87,14 +82,11 @@ export default createContainer(() => {
   }
 
   const activeGroup = Meteor.user().activeGroup;
-
   const handleActiveGroup = Meteor.subscribe('getGroupById', activeGroup);
-  const handleEvents = Meteor.subscribe('events', activeGroup);
 
   return {
-    subsciptions: { handleUsers, handleActiveGroup, handleEvents },
-    group: Groups.findOne(),
-    events: Events.find().fetch(),
+    subsciptions: { handleUsers, handleActiveGroup },
+    group: Groups.findOne({ _id: activeGroup }),
     activeElement: Meteor.user().elemType,
   };
 }, App);

@@ -1,36 +1,38 @@
 import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-export default class Event extends Component {
+
+class Event extends Component {
   constructor(props) {
     super(props);
 
-    this.confirmEvent = this.confirmEvent.bind(this);
     this.setActiveOrder = this.setActiveOrder.bind(this);
+    this.confirmEvent = this.confirmEvent.bind(this);
     this.changeStatus = this.changeStatus.bind(this);
-  }
-
-  confirmEvent() {
-    var event = this.props.event;
-    Meteor.call('events.confirmUser', event._id);
-  }
-
-  checkUser(user) {
-    return Meteor.userId() == user._id;
   }
 
   setActiveOrder() {
     Meteor.call('user.setActiveEvent', this.props.event._id);
   }
 
+  confirmEvent() {
+    const event = this.props.event;
+    Meteor.call('events.confirmUser', event._id);
+  }
+
   changeStatus() {
-    var event = this.props.event;
-    Meteor.call('events.changeStatus', event._id)
+    const event = this.props.event;
+    Meteor.call('events.changeStatus', event._id);
+  }
+
+  checkUser(user) {
+    return Meteor.userId() === user._id;
   }
 
   showOrdersButton() {
     return (
-      <button className="btn btn-primary btn-xs" onClick={this.setActiveOrder}> 
+      <button className="btn btn-primary btn-xs" onClick={this.setActiveOrder}>
         See orders
       </button>
     );
@@ -38,7 +40,7 @@ export default class Event extends Component {
 
   changeStatusButton() {
     return (
-      <button className="btn btn-primary btn-xs" onClick={this.changeStatus}> 
+      <button className="btn btn-primary btn-xs" onClick={this.changeStatus}>
         Change status
       </button>
     );
@@ -46,38 +48,42 @@ export default class Event extends Component {
 
   confirmButton() {
     return (
-      <button className="btn btn-primary btn-xs" onClick={this.confirmEvent}> 
+      <button className="btn btn-primary btn-xs" onClick={this.confirmEvent}>
         Confirm
       </button>
     );
   }
 
   renderActions() {
-    var event = this.props.event;
+    const event = this.props.event;
+    const userId = Meteor.userId();
 
-    if(event.users && event.users.find(this.checkUser)) {
-      if(this.props.owner == Meteor.userId()) {
+    if (event.users && event.users.find((user) => userId === user._id)) {
+      if (this.props.owner === userId) {
         return (
           <div>
             { this.showOrdersButton() }
             { this.changeStatusButton() }
           </div>
         );
-      } else {
-        return (
-          <div>
-            { this.showOrdersButton() }
-          </div>
-        );
       }
+      return (
+        <div>
+          { this.showOrdersButton() }
+        </div>
+      );
     }
 
-    return <div>{ this.confirmButton() }</div>; 
+    return (
+      <div>
+        { this.confirmButton() }
+      </div>
+    );
   }
 
   render() {
-    var event = this.props.event;
-    var time = new Date(event.date);
+    const event = this.props.event;
+    const time = new Date(event.date);
 
     return (
       <div className="event-row">
@@ -90,3 +96,10 @@ export default class Event extends Component {
     );
   }
 }
+
+Event.propTypes = {
+  event: PropTypes.object.isRequired,
+  owner: PropTypes.string.isRequired,
+};
+
+export default Event;
