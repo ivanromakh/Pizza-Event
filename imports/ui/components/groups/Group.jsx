@@ -1,8 +1,10 @@
-import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import InviteForm from './InviteForm';
+import AcceptButton from '../groupButtons/AcceptButton.jsx';
+import ShowEventsButton from '../groupButtons/ShowEventsButton.jsx';
+import ShowMenuButton from '../groupButtons/ShowMenuButton.jsx';
+import InviteForm from './InviteForm.jsx';
 
 
 // Group component for each of client groups
@@ -17,29 +19,10 @@ export default class Group extends Component {
 
     this.onClick = this.onClick.bind(this);
     this.onInviteForm = this.onInviteForm.bind(this);
-    this.onAccepted = this.onAccepted.bind(this);
-    this.openMenuItems = this.openMenuItems.bind(this);
-    this.openEvents = this.openEvents.bind(this);
   }
 
   onInviteForm() {
     this.setState({ showInviteForm: !this.state.showInviteForm });
-  }
-
-  openMenuItems() {
-    Meteor.call('user.setActiveGroup', this.props.group._id, 'menuItems');
-    Meteor.call('user.unsetActiveEvent');
-  }
-
-  openEvents() {
-    Meteor.call('user.setActiveGroup', this.props.group._id, 'events');
-    Meteor.call('user.unsetActiveEvent');
-  }
-
-  // User accept group
-  onAccepted() {
-    Meteor.call('groups.acceptUser', this.props.group._id, this.props.user);
-    Meteor.call('user.acceptedGroup', this.props.group._id, this.props.user);
   }
 
   onClick() {
@@ -58,9 +41,7 @@ export default class Group extends Component {
   renderAcceptButton() {
     if (this.props.referedGroup) {
       return (
-        <button className="btn btn-primary btn-xs btn-block" onClick={this.onAccepted}>
-          Accept
-        </button>
+        <AcceptButton groupId={this.props.group._id} user={this.props.user} />
       );
     }
     return null;
@@ -83,7 +64,7 @@ export default class Group extends Component {
         className="btn btn-primary btn-xs btn-block"
         onClick={this.onClick}
       >
-          Show users
+        Show users
       </button>
     );
   }
@@ -91,9 +72,7 @@ export default class Group extends Component {
   renderMenuItemsButton() {
     if (!this.props.referedGroup) {
       return (
-        <button className="btn btn-primary btn-xs btn-block" onClick={this.openMenuItems}>
-          MenuItems
-        </button>
+        <ShowMenuButton groupId={this.props.group._id} />
       );
     }
     return null;
@@ -102,9 +81,7 @@ export default class Group extends Component {
   renderEventsButton() {
     if (!this.props.referedGroup) {
       return (
-        <button className="btn btn-primary btn-xs btn-block" onClick={this.openEvents}>
-          events
-        </button>
+        <ShowEventsButton groupId={this.props.group._id} />
       );
     }
     return null;
@@ -137,7 +114,7 @@ export default class Group extends Component {
           { this.renderInviteForm(group) }
           <div className="row">
             <div className="col-md-7">
-              <img src={logo} height="42" width="42" />
+              <img src={logo} alt="group-logo" height="42" width="42" />
               { group.name }
             </div>
             <div className="col-md-4">
@@ -155,7 +132,13 @@ export default class Group extends Component {
   }
 }
 
-Group.propTypes = {
-  group: PropTypes.object.isRequired,
+Group.defaultProps = {
+  referedGroup: false,
 };
 
+Group.propTypes = {
+  owner: PropTypes.bool.isRequired,
+  referedGroup: PropTypes.bool,
+  user: PropTypes.object.isRequired,
+  group: PropTypes.object.isRequired,
+};

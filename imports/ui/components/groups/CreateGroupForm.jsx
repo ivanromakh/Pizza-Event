@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
-
+import FileReader from 'react-file-download';
 
 export default class CreateGroupForm extends Component {
   constructor(props) {
@@ -55,9 +55,13 @@ export default class CreateGroupForm extends Component {
         let $imagePreview = null;
 
         if (imagePreviewUrl) {
-          $imagePreview = (<img className="preview-group-logo" src={imagePreviewUrl} />);
+          $imagePreview = (
+            <img className="preview-group-logo" alt="preview" src={imagePreviewUrl} />
+          );
         } else {
-          $imagePreview = (<img className="preview-group-logo" src="/profile-group.png" />);
+          $imagePreview = (
+            <img className="preview-group-logo" alt="preview" src="/profile-group.png" />
+          );
         }
 
         return (

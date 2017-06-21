@@ -68,10 +68,6 @@ InviteForm.propTypes = {
   groupId: PropTypes.string.isRequired,
 };
 
-export default createContainer(() => {
-  Meteor.subscribe('users');
-
-  return {
-    users: Meteor.users.find({ _id: { $ne: Meteor.userId() } }).fetch(),
-  };
-}, InviteForm);
+export default createContainer(() => ({
+  users: Meteor.users.find({ _id: { $ne: Meteor.userId() } }).fetch(),
+}), InviteForm);

@@ -36,7 +36,7 @@ Meteor.methods({
       groupLogo.attachData(url, (error) => {
         if (error) throw new Meteor.Error('not-save-group-logo');
         groupLogo.name('groupLogo');
-        const imageId = Images.insert(groupLogo);
+        Images.insert(groupLogo);
       });
     }
   },
