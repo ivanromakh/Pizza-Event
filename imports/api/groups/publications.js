@@ -3,7 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import { Groups } from './groups';
 
 
-Meteor.publish('userGroups', () => {
+Meteor.publish('userGroups', function publishGroups() {
   const userId = this.userId;
 
   if (!this.userId) {

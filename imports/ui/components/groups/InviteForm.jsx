@@ -19,6 +19,10 @@ class InviteForm extends Component {
     this.handleSelectChange = this.handleSelectChange.bind(this);
   }
 
+  componentWillUnmount() {
+    this.props.handleUsers.stop();
+  }
+
   handleSelectChange(newValue) {
     this.setState({
       selectedUser: newValue,
@@ -69,9 +73,10 @@ InviteForm.propTypes = {
 };
 
 export default createContainer(() => {
-  Meteor.subscribe('users');
+  const handleUsers = Meteor.subscribe('users');
 
   return {
+    handleUsers,
     users: Meteor.users.find({ _id: { $ne: Meteor.userId() } }).fetch(),
   };
 }, InviteForm);

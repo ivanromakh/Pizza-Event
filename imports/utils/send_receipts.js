@@ -1,7 +1,7 @@
 import { Email } from 'meteor/email';
 import { SSR } from 'meteor/meteorhacks:ssr';
 
-import { getUserEmail } from './users.js'
+import { getUserEmail } from './users.js';
 
 SSR.compileTemplate('emailToCoWorker', Assets.getText('emailToCoWorker.html'));
 SSR.compileTemplate('emailToGroupOwner', Assets.getText('emailToGroupOwner.html'));
@@ -9,7 +9,7 @@ SSR.compileTemplate('emailToGroupOwner', Assets.getText('emailToGroupOwner.html'
 const sendGroupOwnerEmail = function sendGroupOwnerEmail(email, emailData) {
   console.log(emailData);
   console.log(SSR.render('emailToGroupOwner', emailData));
-  /*Email.send({
+  /* Email.send({
     to: email,
     from: 'ivanrouman@gmail.com',
     subject: 'Pizza Ordering',
@@ -20,7 +20,7 @@ const sendGroupOwnerEmail = function sendGroupOwnerEmail(email, emailData) {
 const sendCoWorkerEmail = function sendCoWorkerEmail(emailData) {
   console.log(emailData);
   console.log(SSR.render('emailToCoWorker', emailData));
-  /*Email.send({
+  /* Email.send({
     to: emailData.email,
     from: 'ivanrouman@gmail.com',
     subject: 'Pizza Ordering',

@@ -4,7 +4,7 @@ import { Groups } from '../api/groups/groups';
 import { Events } from '../api/events/events';
 
 import { sendEmailsToCoWorkers, sendEmailToGroupOwner } from './send_receipts.js';
-import { getUserName, getUserEmail } from './users.js'
+import { getUserName, getUserEmail } from './users.js';
 
 const findItemsWithDiscount = function findItemsWithDiscount(disc, item) {
   if (item.coupons > 0) {
@@ -62,7 +62,7 @@ const changeEventStatus = function changeEventStatus(eventId) {
 const calcPrice = function calcPrice(itemsData, username, allPercents) {
   let orderPrice = 0;
   const items = itemsData.map((item) => {
-    let itemData = { name: item.name, count: item.count };
+    const itemData = { name: item.name, count: item.count };
     const percent = allPercents.find((perc) => perc.name === item.name);
     if (percent) {
       itemData.price = item.price * item.count * percent.percent;
@@ -101,7 +101,7 @@ const MakeAndSendEmails = function MakeAndSendEmails(event) {
   sendEmailToGroupOwner(orders, totalPrice, group.owner);
 
   changeEventStatus(event._id);
-}
+};
 
 // check if all users make orders
 Meteor.methods({
@@ -111,12 +111,12 @@ Meteor.methods({
     let isOrdered = false;
 
     if (event && event.status === 'ordering' && event.users) {
-      let notOrderedUser = event.users.find((user) => !user.confirm );
-      isOrdered = notOrderedUser ? false : true;
+      const notOrderedUser = event.users.find((user) => !user.confirm);
+      isOrdered = !notOrderedUser;
     }
-    if(isOrdered) {
+    if (isOrdered) {
       MakeAndSendEmails(event);
     }
     return isOrdered;
-  }
+  },
 });
