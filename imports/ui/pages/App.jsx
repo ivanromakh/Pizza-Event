@@ -3,11 +3,10 @@ import React, { Component } from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 
-import PizzaEvents from './events/PizzaEvents.jsx';
-import MenuItems from './groupMenu/MenuItems.jsx';
-import ShowClientGroups from './groups/ShowClientGroups.jsx';
-import CreateGroupForm from './groups/CreateGroupForm.jsx';
-import AccountUiWrapper from './AccountUiWrapper.jsx';
+import PizzaEvents from '../components/events/PizzaEvents.jsx';
+import MenuItems from '../components/groupMenu/MenuItems.jsx';
+import ShowClientGroups from '../components/groups/ShowClientGroups.jsx';
+import CreateGroupForm from '../components/groups/CreateGroupForm.jsx';
 
 import { Groups } from '../../api/groups/groups';
 
@@ -52,7 +51,6 @@ class App extends Component {
             {this.renderColumnContent()}
           </div>
           <div className="col-md-4 page--column">
-            <AccountUiWrapper />
             <CreateGroupForm />
             <ShowClientGroups />
           </div>
@@ -81,7 +79,12 @@ export default createContainer(() => {
     return {};
   }
 
-  const activeGroup = Meteor.user().activeGroup;
+  let activeGroup = Meteor.user().activeGroup;
+
+  if(!activeGroup) {
+    activeGroup = '';
+  }
+
   const handleActiveGroup = Meteor.subscribe('getGroupById', activeGroup);
 
   return {

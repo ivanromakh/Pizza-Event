@@ -1,6 +1,5 @@
 import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
-import FileReader from 'react-file-download';
 
 export default class CreateGroupForm extends Component {
   constructor(props) {
@@ -37,6 +36,7 @@ export default class CreateGroupForm extends Component {
 
     const reader = new FileReader();
     const file = event.target.files[0];
+    console.log(file);
 
     reader.onloadend = () => {
       this.setState({
