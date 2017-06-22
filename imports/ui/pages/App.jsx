@@ -81,7 +81,7 @@ export default createContainer(() => {
 
   let activeGroup = Meteor.user().activeGroup;
 
-  if(!activeGroup) {
+  if (!activeGroup) {
     activeGroup = '';
   }
 

@@ -1,6 +1,6 @@
 import React from 'react';
-
 import { Meteor } from 'meteor/meteor';
+import PropTypes from 'prop-types';
 
 
 class MainMenu extends React.Component {
@@ -10,32 +10,31 @@ class MainMenu extends React.Component {
   }
 
   handleLogout() {
-  	Meteor.logout();
+    Meteor.logout();
   }
 
   renderRightNav() {
-    if(!Meteor.userId()) {
+    if (!Meteor.userId()) {
       return (
-      	<ul className="nav navbar-nav navbar-right">
-      	  <li><a href="/sign-in">SignIn</a></li>
-      	  <li><a href="/sign-up">SignUp</a></li>
-      	</ul>
-      );
-    } else {
-      if(!Meteor.user()) {
-      	return null;
-      }
-      return (
-      	<ul className="nav navbar-nav navbar-right">
-          <li><a>{this.props.user.username}</a></li>
-          <li><a onClick={this.handleLogout}>Logout</a></li>
+        <ul className="nav navbar-nav navbar-right">
+          <li><a href="/sign-in">SignIn</a></li>
+          <li><a href="/sign-up">SignUp</a></li>
         </ul>
       );
-     }
+    }
+    if (!Meteor.user()) {
+      return null;
+    }
+    return (
+      <ul className="nav navbar-nav navbar-right">
+        <li><a>{this.props.user.username}</a></li>
+        <li><a onClick={this.handleLogout}>Logout</a></li>
+      </ul>
+    );
   }
 
   render() {
-  	return (
+    return (
       <nav className="navbar navbar-default">
         <div className="container-fluid">
           <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -51,6 +50,8 @@ class MainMenu extends React.Component {
   }
 }
 
-
+MainMenu.propTypes = {
+  user: PropTypes.object.isRequired,
+};
 
 export default MainMenu;

@@ -36,7 +36,6 @@ export default class CreateGroupForm extends Component {
 
     const reader = new FileReader();
     const file = event.target.files[0];
-    console.log(file);
 
     reader.onloadend = () => {
       this.setState({

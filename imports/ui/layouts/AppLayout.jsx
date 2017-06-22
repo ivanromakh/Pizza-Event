@@ -7,15 +7,14 @@ import MainMenu from '../components/MainMenu.jsx';
 
 class AppLayout extends Component {
   componentWillUnmount() {
-  	this.props.handleUsers.stop();
+    this.props.handleUsers.stop();
   }
 
   render() {
-  	console.log(this.props.user);
-    return ( 
+    return (
       <div>
-      <MainMenu user={this.props.user}/>
-      {this.props.children}
+        <MainMenu user={this.props.user} />
+        {this.props.children}
       </div>
     );
   }
@@ -24,6 +23,7 @@ class AppLayout extends Component {
 AppLayout.propTypes = {
   handleUsers: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
+  children: PropTypes.element.isRequired,
 };
 
 export default createContainer(() => {

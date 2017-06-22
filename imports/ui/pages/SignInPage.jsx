@@ -17,26 +17,21 @@ class SignInPage extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  handleEmailChange(event) {
-   this.setState({email: event.target.value});
-  }
-
-  handlePasswordChange(event) {
-    this.setState({password: event.target.value});
-  }
-
   onSubmit(event) {
     event.preventDefault();
 
     const email = this.state.email;
     const password = this.state.password;
-    const redirectUrl = '/';
-    
-    const userData = Meteor.loginWithPassword({ email }, password, handleResult());
 
-    console.log(userData);
+    Meteor.loginWithPassword({ email }, password, handleResult());
+  }
 
+  handleEmailChange(event) {
+    this.setState({ email: event.target.value });
+  }
 
+  handlePasswordChange(event) {
+    this.setState({ password: event.target.value });
   }
 
   render() {
@@ -45,25 +40,26 @@ class SignInPage extends React.Component {
         <div className="card card-container">
           <h1 className="text-center">Sign In</h1>
           <form className="form-signin" onSubmit={this.onSubmit}>
-            <input 
+            <input
               type="email"
               className="form-control"
               placeholder="Email address"
               value={this.state.email}
               onChange={this.handleEmailChange}
-              required />
+              required
+            />
             <input
               type="password"
               className="form-control"
               placeholder="Password"
               value={this.state.password}
               onChange={this.handlePasswordChange}
-              required 
+              required
             />
             <div id="remember" className="checkbox">
-            <label>
-              <input type="checkbox" value="remember-me" />
-            </label>
+              <label>
+                <input type="checkbox" value="remember-me" />
+              </label>
             </div>
             <button className="btn btn-lg btn-primary btn-block btn-signin" type="submit">Sign in</button>
           </form>

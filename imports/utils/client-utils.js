@@ -1,8 +1,7 @@
 import { browserHistory } from 'react-router';
 
-export const handleResult = onSuccess => (error, result) => {
+export const handleResult = onSuccess => (error) => {
   if (!error) {
-  	console.log(result);
-  	browserHistory.push("/");
+    browserHistory.push('/');
   }
 };
