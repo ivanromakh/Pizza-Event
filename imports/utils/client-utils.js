@@ -19,6 +19,6 @@ export const handleSignUp = (error) => {
   }
 };
 
-export const getUserName = (user) => {
+export const getUserName = function getUserName(user) {
   return (user.profile) ? user.profile.name : user.username;
 };

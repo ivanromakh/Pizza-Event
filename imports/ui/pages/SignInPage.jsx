@@ -66,8 +66,15 @@ class SignInPage extends React.Component {
                 <input type="checkbox" value="remember-me" />
               </label>
             </div>
-            <img className='move' onClick={this.google} 
-              src="/social-icons/google.png" height="42" width="42" />
+            <div onClick={this.google}>
+              <img
+                className="move"
+                alt="google-icon"
+                src="/social-icons/google.png"
+                height="42"
+                width="42"
+              />
+            </div>
             <button className="btn btn-lg btn-primary btn-block btn-signin" type="submit">Sign in</button>
           </form>
         </div>
