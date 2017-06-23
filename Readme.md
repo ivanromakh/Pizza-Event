@@ -52,19 +52,21 @@ if user 'sign in'. If he sign in he can get any information except other user pa
     ...
 
  ### Used modules ###
-bcrypt - for sign in encryption password
-react  - client framework
-react-calendar  - this is component for getting time. Used for events date.
-react-select    - very cool component. Used for selection users and menu items.
+    bcrypt - for sign in encryption password
+    react  - client framework
+    react-calendar  - this is component for getting time. Used for events date.
+    react-select    - very cool component. Used for selection users and menu items.
 ...
 
 ## Install instructions ##
 For installing on Windows write next commands in commandline
 ```
+    meteor npm install
     mkdir settings
     echo settings>settings.json
 ```
 Then put this content in settings.json
+```
 {
     "smtp": "Your smtp service (gmail not working on this meteor version)",
     "google": {
@@ -72,3 +74,4 @@ Then put this content in settings.json
         "secret": "your google api secret"
     }
 }
+```
