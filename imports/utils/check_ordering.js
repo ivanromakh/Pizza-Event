@@ -70,7 +70,7 @@ const calcPrice = function calcPrice(itemsData, username, allPercents) {
     } else {
       itemData.price = item.price * item.count;
     }
-    orderPrice += item.price;
+    orderPrice += itemData.price;
     return itemData;
   });
   return { items, orderPrice, username };
