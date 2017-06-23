@@ -18,7 +18,7 @@ class AppLayout extends Component {
   render() {
     return (
       <div>
-        <Alert stack={{limit: 3}} />
+        <Alert stack={{ limit: 3 }} />
         <MainMenu user={this.props.user} />
         {this.props.children}
       </div>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Accounts } from 'meteor/accounts-base';
-import Alert from 'react-s-alert';
 
 import { handleSignUp } from '../../utils/client-utils';
 

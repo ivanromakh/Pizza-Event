@@ -55,7 +55,7 @@ export default class Group extends Component {
 
   renderInviteButton() {
     if (this.props.owner) {
-      return <li onClick={this.onInviteForm}> Invite user </li>;
+      return <li><a onClick={this.onInviteForm}> Invite user </a></li>;
     }
     return null;
   }
@@ -78,9 +78,9 @@ export default class Group extends Component {
         { this.renderInviteForm(group) }
         { this.renderAcceptButton(group) }
         { this.renderInviteButton() }
-        { !this.props.referedGroup ? <ShowEventsButton groupId={group._id}  />: null }
+        { !this.props.referedGroup ? <ShowEventsButton groupId={group._id} /> : null }
         { !this.props.referedGroup ? <ShowMenuButton groupId={group._id} /> : null }
-        <li onClick={this.toggleUsers}> Show users </li>
+        <li><a onClick={this.toggleUsers}> Show users </a></li>
         { this.state.showUsers ? this.renderUsersList(group) : null }
       </ul>
     );
@@ -92,7 +92,7 @@ export default class Group extends Component {
     return (
       <ul>
         <li>
-          <img className="img-circle" src={logo} alt="group-logo" height="42" width="42" /> 
+          <img className="img-circle" src={logo} alt="group-logo" height="42" width="42" />
           <a onClick={this.toggleActions}>
             { group.name }
             <span className="arrow"></span>

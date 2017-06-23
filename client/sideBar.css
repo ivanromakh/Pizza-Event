@@ -82,9 +82,11 @@
   text-decoration: none;
   color: #e1ffff;
 }
-.list-users {
-  background-color: #000;
+
+.list-users li {
+  background-color: #00CC66;
 }
+
 .child-nav {
   background-color: #222;
 }

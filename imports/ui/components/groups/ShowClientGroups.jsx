@@ -84,7 +84,7 @@ class ShowClientGroups extends Component {
         <div className="menu-list">
           <ul className="menu-content">
             <CreateGroupForm />
-            <li> 
+            <li>
               <a onClick={this.toggleOwnerGroups}> Owner Groups <span className="arrow"></span></a>
             </li>
             <ul>
@@ -92,7 +92,7 @@ class ShowClientGroups extends Component {
             </ul>
           </ul>
           <ul className="menu-content">
-            <li> 
+            <li>
               <a onClick={this.toggleLocalGroups}> Local Groups <span className="arrow"></span></a>
             </li>
             <ul>
@@ -100,12 +100,12 @@ class ShowClientGroups extends Component {
             </ul>
           </ul>
           <ul className="menu-content">
-            <li> 
+            <li>
               <a onClick={this.toggleInvitations}> Invitations <span className="arrow"></span></a>
             </li>
             <ul>
-              { this.state.showInvitations 
-                ? <ReferredGroups 
+              { this.state.showInvitations
+                ? <ReferredGroups
                   referredGroups={this.props.referredGroups}
                   user={this.props.user}
                 /> : null

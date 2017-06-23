@@ -16,7 +16,7 @@ class ShowMenuButton extends Component {
   }
 
   render() {
-    return <li onClick={this.openMenuItems}> Menu </li>;
+    return <li><a className="fullsize" onClick={this.openMenuItems}> Menu </a></li>;
   }
 }
 

@@ -16,7 +16,7 @@ class AcceptButton extends Component {
   }
 
   render() {
-    return <li onClick={this.onAccepted} >Accept</li>;
+    return <li><a className="fullsize" onClick={this.onAccepted} >Accept</a></li>;
   }
 }
 

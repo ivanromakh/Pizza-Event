@@ -16,7 +16,7 @@ class ShowEventsButton extends Component {
   }
 
   render() {
-    return <li onClick={this.openEvents}> Events </li>;
+    return <li><a className="fullsize" onClick={this.openEvents}> Events </a></li>;
   }
 }
 

@@ -1,6 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import React, { Component } from 'react';
 
+
+/* global FileReader */
+
 export default class CreateGroupForm extends Component {
   constructor(props) {
     super(props);
@@ -60,7 +63,7 @@ export default class CreateGroupForm extends Component {
         <img className="preview-group-logo" alt="preview" src="/profile-group.png" />
       );
     }
-    
+
     return (
       <div className="clearfix create-group-form">
         <form className="form-horizontal" onSubmit={this.createGroup}>
@@ -102,7 +105,7 @@ export default class CreateGroupForm extends Component {
     if (Meteor.userId()) {
       return (
         <ul>
-          <li> 
+          <li>
             <a onClick={this.toggleForm}> Create group <span className="arrow"></span></a>
           </li>
           <li>

@@ -386,6 +386,10 @@ body {
   color: yellow;
 }
 
+.fullsize {
+  display:block;
+}
+
 .nav>li>a {
   border-bottom: 3px solid transparent;
 }
