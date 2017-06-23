@@ -60,8 +60,10 @@ react-select    - very cool component. Used for selection users and menu items.
 
 ## Install instructions ##
 For installing on Windows write next commands in commandline
+```
     mkdir settings
     echo settings>settings.json
+```
 Then put this content in settings.json
 {
     "smtp": "Your smtp service (gmail not working on this meteor version)",
