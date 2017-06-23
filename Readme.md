@@ -79,3 +79,4 @@ And then run
 ```
     meteor --settings settings/settings.json
 ```
+And then open brouser by addres http://localhost:3000
