@@ -373,6 +373,12 @@ body {
 .forgot-password:focus{
     color: rgb(12, 97, 33);
 }
+.move{
+	opacity: 0.5;
+}
+.move:hover{
+  opacity: 1;
+}
 
 /*Menu*/
 .navbar{

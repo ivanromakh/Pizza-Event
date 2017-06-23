@@ -11,11 +11,14 @@ export const handleResult = onSuccess => (error, result) => {
   }
 };
 
-
 export const handleSignUp = (error) => {
   if (error) {
     showError(error);
   } else {
     browserHistory.push('/');
   }
+};
+
+export const getUserName = (user) => {
+  return (user.profile) ? user.profile.name : user.username;
 };

@@ -6,6 +6,7 @@ import ShowEventsButton from '../groupButtons/ShowEventsButton.jsx';
 import ShowMenuButton from '../groupButtons/ShowMenuButton.jsx';
 import InviteForm from './InviteForm.jsx';
 
+import { getUserName } from '../../../utils/client-utils';
 
 // Group component for each of client groups
 export default class Group extends Component {
@@ -61,7 +62,8 @@ export default class Group extends Component {
   }
 
   renderUser(user) {
-    return <li className="list-group-item" key={user._id}> { user.username } </li>;
+    const username = getUserName(user);
+    return <li className="list-group-item" key={user._id}> { username } </li>;
   }
 
   renderUsersList(group) {

@@ -3,6 +3,7 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { handleResult } from '../../utils/client-utils';
 
+
 class SignInPage extends React.Component {
   constructor(props) {
     super(props);
@@ -34,6 +35,10 @@ class SignInPage extends React.Component {
     this.setState({ password: event.target.value });
   }
 
+  google() {
+    Meteor.loginWithGoogle(handleResult());
+  }
+
   render() {
     return (
       <div className="container">
@@ -61,6 +66,8 @@ class SignInPage extends React.Component {
                 <input type="checkbox" value="remember-me" />
               </label>
             </div>
+            <img className='move' onClick={this.google} 
+              src="/social-icons/google.png" height="42" width="42" />
             <button className="btn btn-lg btn-primary btn-block btn-signin" type="submit">Sign in</button>
           </form>
         </div>

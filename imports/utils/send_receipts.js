@@ -9,23 +9,23 @@ SSR.compileTemplate('emailToGroupOwner', Assets.getText('emailToGroupOwner.html'
 const sendGroupOwnerEmail = function sendGroupOwnerEmail(email, emailData) {
   console.log(emailData);
   console.log(SSR.render('emailToGroupOwner', emailData));
-  /* Email.send({
+   Email.send({
     to: email,
     from: 'ivanrouman@gmail.com',
     subject: 'Pizza Ordering',
-    html: SSR.render('emailToGroupOwner', { emailData }),
-  });*/
+    html: SSR.render('emailToGroupOwner', emailData),
+  });
 };
 
 const sendCoWorkerEmail = function sendCoWorkerEmail(emailData) {
   console.log(emailData);
   console.log(SSR.render('emailToCoWorker', emailData));
-  /* Email.send({
+   Email.send({
     to: emailData.email,
     from: 'ivanrouman@gmail.com',
     subject: 'Pizza Ordering',
-    html: SSR.render('emailToCoWorker', { emailData }),
-  });*/
+    html: SSR.render('emailToCoWorker', emailData),
+  });
 };
 
 exports.sendEmailsToCoWorkers = function sendEmailsToCoWorkers(orders) {

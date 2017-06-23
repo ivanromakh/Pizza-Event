@@ -5,6 +5,8 @@ import { FS } from 'meteor/cfs:base-package';
 import { Groups } from './groups';
 import { Images } from '../images/images';
 
+import { getUserName } from '../../utils/client-utils';
+
 
 Meteor.methods({
   'groups.create'(name, url) {
@@ -12,13 +14,13 @@ Meteor.methods({
     check(url, String);
 
     const userId = Meteor.userId();
-    const user = Meteor.user();
 
     if (!userId) {
       throw new Meteor.Error('not-authorized');
     }
 
-    const username = (user.profile) ? user.profile.name : user.username;
+    const user = Meteor.user();
+    const username = getUserName(user);
 
     const groupId = Groups.insert({
       name,

@@ -1,7 +1,12 @@
 import React from 'react';
+
 import { Meteor } from 'meteor/meteor';
+
 import PropTypes from 'prop-types';
+
 import { showSuccess } from '../../utils/alerts';
+import { getUserName } from '../../utils/client-utils';
+
 
 class MainMenu extends React.Component {
   constructor(props) {
@@ -26,9 +31,10 @@ class MainMenu extends React.Component {
     if (!Meteor.user()) {
       return null;
     }
+    const username = getUserName(this.props.user);
     return (
       <ul className="nav navbar-nav navbar-right">
-        <li><a>{this.props.user.username}</a></li>
+        <li><a>{username}</a></li>
         <li><a onClick={this.handleLogout}>Logout</a></li>
       </ul>
     );
