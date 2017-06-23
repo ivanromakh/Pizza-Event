@@ -47,64 +47,68 @@ export default class CreateGroupForm extends Component {
     reader.readAsDataURL(file);
   }
 
+  renderCreateGroupForm() {
+    const imagePreviewUrl = this.state.imagePreviewUrl;
+    let $imagePreview = null;
+
+    if (imagePreviewUrl) {
+      $imagePreview = (
+        <img className="preview-group-logo" alt="preview" src={imagePreviewUrl} />
+      );
+    } else {
+      $imagePreview = (
+        <img className="preview-group-logo" alt="preview" src="/profile-group.png" />
+      );
+    }
+    
+    return (
+      <div className="clearfix create-group-form">
+        <form className="form-horizontal" onSubmit={this.createGroup}>
+          <h4> Create group </h4>
+          <div className="form-group">
+            <label className="control-label col-sm-3" htmlFor="email">Name:</label>
+            <div className="col-sm-7">
+              <input
+                className="form-control"
+                type="text"
+                value={this.state.groupName}
+                onChange={this.handleChange}
+              />
+            </div>
+          </div>
+          <div className="form-group">
+            <label className="control-label col-sm-3" htmlFor="email">Group logo:</label>
+            <div className="col-sm-7">
+              { $imagePreview }
+              <input
+                className="form-control"
+                type="file"
+                onChange={this.handleImageChange}
+              />
+            </div>
+          </div>
+          <button className="btn btn-primary btn-xs pull-right" onClick={this.toggleForm}>
+            Cancel
+          </button>
+          <button className="btn btn-primary btn-xs pull-right" type="submit">
+            Create
+          </button>
+        </form>
+      </div>
+    );
+  }
+
   render() {
     if (Meteor.userId()) {
-      if (this.state.showForm) {
-        const imagePreviewUrl = this.state.imagePreviewUrl;
-        let $imagePreview = null;
-
-        if (imagePreviewUrl) {
-          $imagePreview = (
-            <img className="preview-group-logo" alt="preview" src={imagePreviewUrl} />
-          );
-        } else {
-          $imagePreview = (
-            <img className="preview-group-logo" alt="preview" src="/profile-group.png" />
-          );
-        }
-
-        return (
-          <div className="thumbnail clearfix create-group-form">
-            <form className="form-horizontal" onSubmit={this.createGroup}>
-              <h4> Create group </h4>
-              <div className="form-group">
-                <label className="control-label col-sm-3" htmlFor="email">Name:</label>
-                <div className="col-sm-7">
-                  <input
-                    className="form-control"
-                    type="text"
-                    value={this.state.groupName}
-                    onChange={this.handleChange}
-                  />
-                </div>
-              </div>
-              <div className="form-group">
-                <label className="control-label col-sm-3" htmlFor="email">Group logo:</label>
-                <div className="col-sm-7">
-                  { $imagePreview }
-                  <input
-                    className="form-control"
-                    type="file"
-                    onChange={this.handleImageChange}
-                  />
-                </div>
-              </div>
-              <button className="btn btn-primary btn-xs pull-right" onClick={this.toggleForm}>
-                Cancel
-              </button>
-              <button className="btn btn-primary btn-xs pull-right" type="submit">
-                Create
-              </button>
-            </form>
-          </div>
-        );
-      }
       return (
-        <div className="create-group-form">
-          <button className="btn btn-primary btn-xs" onClick={this.toggleForm} value>
-              Show creation group
-            </button>
-        </div>
+        <ul>
+          <li> 
+            <a onClick={this.toggleForm}> Create group <span className="arrow"></span></a>
+          </li>
+          <li>
+            {this.state.showForm ? this.renderCreateGroupForm() : null}
+          </li>
+        </ul>
       );
     }
     return <p> Pleasure sign in if you want to see groups </p>;

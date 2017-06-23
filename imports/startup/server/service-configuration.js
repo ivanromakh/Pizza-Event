@@ -4,9 +4,9 @@ import { ServiceConfiguration } from 'meteor/service-configuration';
 
 process.env.MAIL_URL = Meteor.settings.smtp;
 
-Accounts.config({
+/*Accounts.config({
   sendVerificationEmail: true,
-});
+});*/
 
 ServiceConfiguration.configurations.upsert({
   service: 'google',

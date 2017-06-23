@@ -5,16 +5,44 @@ import { createContainer } from 'meteor/react-meteor-data';
 
 import { Groups } from '../../../api/groups/groups';
 import { Images } from '../../../api/images/images';
+
 import Group from './Group.jsx';
 import ReferredGroups from './ReferredGroups.jsx';
+import CreateGroupForm from './CreateGroupForm.jsx';
 
 
 class ShowClientGroups extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      showOwnerGroups: false,
+      showLocalGroups: false,
+      showInvitations: false,
+    };
+
+    this.toggleOwnerGroups = this.toggleOwnerGroups.bind(this);
+    this.toggleLocalGroups = this.toggleLocalGroups.bind(this);
+    this.toggleInvitations = this.toggleInvitations.bind(this);
+  }
+
   componentWillUnmount() {
     const subscriptions = this.props.subscriptions;
 
     subscriptions.handleGroups.stop();
     subscriptions.handleImages.stop();
+  }
+
+  toggleOwnerGroups() {
+    this.setState({ showOwnerGroups: !this.state.showOwnerGroups });
+  }
+
+  toggleLocalGroups() {
+    this.setState({ showLocalGroups: !this.state.toggleLocalGroups });
+  }
+
+  toggleInvitations() {
+    this.setState({ showInvitations: !this.state.toggleInvitations });
   }
 
   renderLocalGroups() {
@@ -51,20 +79,40 @@ class ShowClientGroups extends Component {
 
   render() {
     return (
-      <div className="thumbnail">
-        <p> Owner Groups </p>
-        <ul>
-          { this.renderOwnerGroups() }
-        </ul>
-        <p> Local Groups </p>
-        <ul>
-          { this.renderLocalGroups() }
-        </ul>
-        <p> Groups which invited you </p>
-        <ReferredGroups
-          referredGroups={this.props.referredGroups}
-          user={this.props.user}
-        />
+      <div className="nav-side-menu">
+        <div className="brand">Groups</div>
+        <div className="menu-list">
+          <ul className="menu-content">
+            <CreateGroupForm />
+            <li> 
+              <a onClick={this.toggleOwnerGroups}> Owner Groups <span className="arrow"></span></a>
+            </li>
+            <ul>
+              { this.state.showOwnerGroups ? this.renderOwnerGroups() : null }
+            </ul>
+          </ul>
+          <ul className="menu-content">
+            <li> 
+              <a onClick={this.toggleLocalGroups}> Local Groups <span className="arrow"></span></a>
+            </li>
+            <ul>
+              { this.state.showLocalGroups ? this.renderLocalGroups() : null }
+            </ul>
+          </ul>
+          <ul className="menu-content">
+            <li> 
+              <a onClick={this.toggleInvitations}> Invitations <span className="arrow"></span></a>
+            </li>
+            <ul>
+              { this.state.showInvitations 
+                ? <ReferredGroups 
+                  referredGroups={this.props.referredGroups}
+                  user={this.props.user}
+                /> : null
+              }
+            </ul>
+          </ul>
+        </div>
       </div>
     );
   }

@@ -16,11 +16,7 @@ class ShowEventsButton extends Component {
   }
 
   render() {
-    return (
-      <button className="btn btn-primary btn-xs btn-block" onClick={this.openEvents}>
-        Events
-      </button>
-    );
+    return <li onClick={this.openEvents}> Events </li>;
   }
 }
 

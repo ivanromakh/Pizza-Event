@@ -12,25 +12,31 @@ export default class Group extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      showActions: false,
       showUsers: false,
       showInviteForm: false,
       activeGroup: false,
     };
 
-    this.onClick = this.onClick.bind(this);
+    this.toggleUsers = this.toggleUsers.bind(this);
     this.onInviteForm = this.onInviteForm.bind(this);
+    this.toggleActions = this.toggleActions.bind(this);
   }
 
   onInviteForm() {
     this.setState({ showInviteForm: !this.state.showInviteForm });
   }
 
-  onClick() {
+  toggleUsers() {
     this.setState({ showUsers: !this.state.showUsers });
   }
 
+  toggleActions() {
+    this.setState({ showActions: !this.state.showActions });
+  }
+
   renderInviteForm(group) {
-    if (this.state.showInviteForm) {
+    if (this.props.owner && this.state.showInviteForm) {
       return (
         <InviteForm key={group._id} groupId={group._id} />
       );
@@ -38,10 +44,10 @@ export default class Group extends Component {
     return null;
   }
 
-  renderAcceptButton() {
+  renderAcceptButton(group) {
     if (this.props.referedGroup) {
       return (
-        <AcceptButton groupId={this.props.group._id} user={this.props.user} />
+        <AcceptButton groupId={group._id} user={this.props.user} />
       );
     }
     return null;
@@ -49,85 +55,51 @@ export default class Group extends Component {
 
   renderInviteButton() {
     if (this.props.owner) {
-      return (
-        <button className="btn btn-primary btn-xs btn-block" onClick={this.onInviteForm}>
-          Invite user
-        </button>
-      );
-    }
-    return null;
-  }
-
-  renderUsersButton() {
-    return (
-      <button
-        className="btn btn-primary btn-xs btn-block"
-        onClick={this.onClick}
-      >
-        Show users
-      </button>
-    );
-  }
-
-  renderMenuItemsButton() {
-    if (!this.props.referedGroup) {
-      return (
-        <ShowMenuButton groupId={this.props.group._id} />
-      );
-    }
-    return null;
-  }
-
-  renderEventsButton() {
-    if (!this.props.referedGroup) {
-      return (
-        <ShowEventsButton groupId={this.props.group._id} />
-      );
+      return <li onClick={this.onInviteForm}> Invite user </li>;
     }
     return null;
   }
 
   renderUser(user) {
-    return (<li className="list-group-item" key={user._id}> { user.username } </li>);
+    return <li className="list-group-item" key={user._id}> { user.username } </li>;
   }
 
   renderUsersList(group) {
-    if (this.state.showUsers) {
-      return (
-        <div>
-          <p>Users list</p>
-          <ul className="list-group">
-            { group.users.map((user) => this.renderUser(user)) }
-          </ul>
-        </div>
-      );
-    }
-    return null;
+    return (
+      <ul className="list-users">
+        { group.users.map((user) => this.renderUser(user)) }
+      </ul>
+    );
+  }
+
+  renderActions(group) {
+    return (
+      <ul className="child-nav">
+        { this.renderInviteForm(group) }
+        { this.renderAcceptButton(group) }
+        { this.renderInviteButton() }
+        { !this.props.referedGroup ? <ShowEventsButton groupId={group._id}  />: null }
+        { !this.props.referedGroup ? <ShowMenuButton groupId={group._id} /> : null }
+        <li onClick={this.toggleUsers}> Show users </li>
+        { this.state.showUsers ? this.renderUsersList(group) : null }
+      </ul>
+    );
   }
 
   render() {
     const group = this.props.group;
     const logo = group.logo ? group.logo : 'profile-group.png';
     return (
-      <div className="thumbnail">
-        <div>
-          { this.renderInviteForm(group) }
-          <div className="row">
-            <div className="col-md-7">
-              <img src={logo} alt="group-logo" height="42" width="42" />
-              { group.name }
-            </div>
-            <div className="col-md-4">
-              { this.renderAcceptButton() }
-              { this.renderInviteButton() }
-              { this.renderUsersButton() }
-              { this.renderMenuItemsButton() }
-              { this.renderEventsButton() }
-            </div>
-          </div>
-          { this.renderUsersList(group) }
-        </div>
-      </div>
+      <ul>
+        <li>
+          <img className="img-circle" src={logo} alt="group-logo" height="42" width="42" /> 
+          <a onClick={this.toggleActions}>
+            { group.name }
+            <span className="arrow"></span>
+          </a>
+        </li>
+        { this.state.showActions ? this.renderActions(group) : null }
+      </ul>
     );
   }
 }

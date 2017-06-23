@@ -44,21 +44,18 @@ class InviteForm extends Component {
     }
 
     return (
-      <div className="thumbnail">
-        <p className="text-center"> Users invitation </p>
-        <form onSubmit={this.sendInvitation}>
-          <Select
-            autofocus
-            options={options}
-            name="selected-order"
-            disabled={this.state.disabled}
-            value={this.state.selectedUser}
-            onChange={this.handleSelectChange}
-            searchable={this.state.searchable}
-          />
-          <button type="submit" className="btn btn-primary btn-xs pull-center">Invite</button>
-        </form>
-      </div>
+      <form onSubmit={this.sendInvitation}>
+        <Select
+          autofocus
+          options={options}
+          name="selected-order"
+          disabled={this.state.disabled}
+          value={this.state.selectedUser}
+          onChange={this.handleSelectChange}
+          searchable={this.state.searchable}
+        />
+        <button type="submit" className="btn btn-primary">Invite</button>
+      </form>
     );
   }
 }

@@ -5,6 +5,7 @@ import Router from 'react-router/lib/Router';
 import Route from 'react-router/lib/Route';
 import IndexRoute from 'react-router/lib/IndexRoute';
 import { render } from 'react-dom';
+import 'react-s-alert/dist/s-alert-default.css';
 
 import App from '../../ui/pages/App.jsx';
 import AppLayout from '../../ui/layouts/AppLayout.jsx';

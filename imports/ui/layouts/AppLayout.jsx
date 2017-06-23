@@ -3,6 +3,11 @@ import React, { Component } from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 
+import Alert from 'react-s-alert';
+
+import 'react-s-alert/dist/s-alert-default.css';
+import 'react-s-alert/dist/s-alert-css-effects/genie.css';
+
 import MainMenu from '../components/MainMenu.jsx';
 
 class AppLayout extends Component {
@@ -13,6 +18,7 @@ class AppLayout extends Component {
   render() {
     return (
       <div>
+        <Alert stack={{limit: 3}} />
         <MainMenu user={this.props.user} />
         {this.props.children}
       </div>

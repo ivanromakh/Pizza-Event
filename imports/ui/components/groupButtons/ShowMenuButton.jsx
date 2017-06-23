@@ -16,11 +16,7 @@ class ShowMenuButton extends Component {
   }
 
   render() {
-    return (
-      <button className="btn btn-primary btn-xs btn-block" onClick={this.openMenuItems}>
-        Menu
-      </button>
-    );
+    return <li onClick={this.openMenuItems}> Menu </li>;
   }
 }
 

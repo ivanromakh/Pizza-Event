@@ -16,12 +16,7 @@ class AcceptButton extends Component {
   }
 
   render() {
-    return (
-      <button
-        className="btn btn-primary btn-xs btn-block"
-        onClick={this.onAccepted}
-      >Accept</button>
-    );
+    return <li onClick={this.onAccepted} >Accept</li>;
   }
 }
 

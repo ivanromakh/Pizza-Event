@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import PropTypes from 'prop-types';
-
+import { showSuccess } from '../../utils/alerts';
 
 class MainMenu extends React.Component {
   constructor(props) {
@@ -11,6 +11,7 @@ class MainMenu extends React.Component {
 
   handleLogout() {
     Meteor.logout();
+    showSuccess('You are logged out');
   }
 
   renderRightNav() {
@@ -37,7 +38,7 @@ class MainMenu extends React.Component {
     return (
       <nav className="navbar navbar-default">
         <div className="container-fluid">
-          <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <div className="collapse navbar-collapse">
             <ul className="nav navbar-nav">
               <li className="active"><a href="/">Home</a></li>
               <li><a href="/pizza">Pizza</a></li>
