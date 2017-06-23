@@ -75,3 +75,7 @@ Then put this content in settings.json
     }
 }
 ```
+And then run
+```
+    meteor --settings settings/settings.json
+```
